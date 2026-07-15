@@ -1,0 +1,9 @@
+# When opening /project-2.0/, serve the production build in dist/
+# (Do not serve the Vite source index.html — it loads /src/main.tsx and causes MIME errors.)
+# Requires: a2enmod rewrite + AllowOverride All for /var/www/
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  RewriteBase /project-2.0/
+  RewriteRule ^dist/ - [L]
+  RewriteRule ^(.*)$ dist/$1 [L]
+</IfModule>

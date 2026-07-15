@@ -1,0 +1,13 @@
+# Serve built JS/CSS with correct MIME types (fixes module script MIME errors)
+AddType text/javascript .js .mjs
+AddType text/css .css
+AddType image/svg+xml .svg
+
+# SPA fallback: keep client routes on index.html
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  RewriteRule ^index\.html$ - [L]
+  RewriteCond %{REQUEST_FILENAME} !-f
+  RewriteCond %{REQUEST_FILENAME} !-d
+  RewriteRule . index.html [L]
+</IfModule>
