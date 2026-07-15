@@ -3,6 +3,7 @@
   "private": true,
   "version": "1.0.0",
   "type": "module",
+  "homepage": ".",
   "description": "Premium developer portfolio for Kirti Koyani, Frontend Developer.",
   "scripts": {
     "dev": "vite",
