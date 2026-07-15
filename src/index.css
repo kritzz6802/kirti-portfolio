@@ -1,0 +1,141 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    /* Default accent = indigo/blue. Overridden at runtime via localStorage. */
+    --accent: 99 102 241;
+
+    /* Light theme surface tokens (RGB triplets) */
+    --bg: 248 249 252;
+    --bg-elevated: 255 255 255;
+    --border: 226 232 240;
+    --text: 17 24 39;
+    --text-soft: 71 85 105;
+    --text-faint: 100 116 139;
+  }
+
+  :root.dark {
+    --bg: 8 11 18;
+    --bg-elevated: 17 22 32;
+    --border: 32 41 56;
+    --text: 237 242 247;
+    --text-soft: 176 187 204;
+    --text-faint: 128 141 160;
+  }
+
+  * {
+    border-color: rgb(var(--border));
+  }
+
+  html {
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  body {
+    background-color: rgb(var(--bg));
+    color: rgb(var(--text));
+    font-family: theme('fontFamily.sans');
+    transition: background-color 0.4s ease, color 0.4s ease;
+    overflow-x: hidden;
+  }
+
+  ::selection {
+    background: rgb(var(--accent) / 0.28);
+    color: rgb(var(--text));
+  }
+
+  /* Custom scrollbar */
+  ::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+  }
+  ::-webkit-scrollbar-track {
+    background: rgb(var(--bg));
+  }
+  ::-webkit-scrollbar-thumb {
+    background: rgb(var(--accent) / 0.5);
+    border-radius: 999px;
+    border: 2px solid rgb(var(--bg));
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: rgb(var(--accent) / 0.75);
+  }
+}
+
+@layer components {
+  .surface {
+    background-color: rgb(var(--bg-elevated));
+  }
+  .text-soft {
+    color: rgb(var(--text-soft));
+  }
+  .text-faint {
+    color: rgb(var(--text-faint));
+  }
+
+  /* Reusable gradient text tied to the active accent */
+  .accent-gradient-text {
+    background-image: linear-gradient(
+      120deg,
+      rgb(var(--accent)),
+      rgb(var(--accent) / 0.55),
+      rgb(var(--text))
+    );
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+
+  .glass {
+    background: rgb(var(--bg-elevated) / 0.7);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+  }
+
+  /* Animated conic border on hover for premium cards */
+  .card-hover {
+    transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1),
+      box-shadow 0.35s ease, border-color 0.35s ease;
+  }
+  .card-hover:hover {
+    transform: translateY(-6px);
+    border-color: rgb(var(--accent) / 0.55);
+    box-shadow: 0 20px 50px -20px rgb(var(--accent) / 0.4);
+  }
+}
+
+@layer utilities {
+  .container-px {
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
+  }
+  @media (min-width: 1024px) {
+    .container-px {
+      padding-left: 2rem;
+      padding-right: 2rem;
+    }
+  }
+
+  .bg-grid {
+    background-image: linear-gradient(rgb(var(--border) / 0.6) 1px, transparent 1px),
+      linear-gradient(90deg, rgb(var(--border) / 0.6) 1px, transparent 1px);
+    background-size: 56px 56px;
+    -webkit-mask-image: radial-gradient(ellipse 70% 60% at 50% 0%, #000 60%, transparent 100%);
+    mask-image: radial-gradient(ellipse 70% 60% at 50% 0%, #000 60%, transparent 100%);
+  }
+}
+
+/* Respect users who prefer reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

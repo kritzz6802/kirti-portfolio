@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="en" class="scroll-smooth">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+
+    <!-- Primary Meta Tags -->
+    <title>Kirti Koyani — Frontend Developer</title>
+    <meta name="title" content="Kirti Koyani — Frontend Developer" />
+    <meta
+      name="description"
+      content="Kirti Koyani is a Frontend Developer with 3+ years of experience building high-performance web and mobile apps with React, Vue, TypeScript and the modern JavaScript ecosystem."
+    />
+    <meta name="author" content="Kirti Koyani" />
+    <meta
+      name="keywords"
+      content="Kirti Koyani, Frontend Developer, React Developer, Vue Developer, TypeScript, Next.js, Nuxt, Tailwind CSS, Ahmedabad"
+    />
+    <meta name="theme-color" content="#0b0f17" />
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Kirti Koyani — Frontend Developer" />
+    <meta
+      property="og:description"
+      content="Frontend Developer crafting fast, elegant web experiences with React, Vue & TypeScript."
+    />
+    <meta property="og:image" content="/og-image.svg" />
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Kirti Koyani — Frontend Developer" />
+    <meta
+      name="twitter:description"
+      content="Frontend Developer crafting fast, elegant web experiences with React, Vue & TypeScript."
+    />
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&family=JetBrains+Mono:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- Set theme before paint to avoid a flash of the wrong theme -->
+    <script>
+      (function () {
+        try {
+          var theme = localStorage.getItem('portfolio-theme') || 'dark'
+          var accent = localStorage.getItem('portfolio-accent')
+          if (theme === 'dark') document.documentElement.classList.add('dark')
+          if (accent) document.documentElement.style.setProperty('--accent', accent)
+        } catch (e) {}
+      })()
+    </script>
+
+    <!-- Structured data for SEO -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "Person",
+        "name": "Kirti Koyani",
+        "jobTitle": "Frontend Developer",
+        "address": {
+          "@type": "PostalAddress",
+          "addressLocality": "Ahmedabad",
+          "addressCountry": "India"
+        },
+        "email": "kirtikkoyani6802@gmail.com",
+        "sameAs": ["https://www.linkedin.com/in/kirti-koyani"],
+        "knowsAbout": ["React.js", "Vue.js", "TypeScript", "Next.js", "Tailwind CSS"]
+      }
+    </script>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>
