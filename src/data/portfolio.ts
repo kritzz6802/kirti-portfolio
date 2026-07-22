@@ -8,6 +8,9 @@ export interface Social {
 export interface SkillGroup {
   category: string
   items: string[]
+  /** Emoji / short glyph used as the card's visual token */
+  icon: string
+  featured?: boolean
 }
 
 export interface Project {
@@ -40,7 +43,7 @@ export const profile = {
   location: 'Ahmedabad, India',
   yearsExperience: '3+',
   tagline: 'I build fast, elegant web & mobile experiences.',
-  bio: `Frontend Developer with ${'3+'} years of experience crafting complex, high-performance web and mobile applications with React.js, Vue.js and the modern JavaScript ecosystem. I turn ambitious designs into efficient, reusable component architectures and partner with cross-functional teams to ship polished products on time.`,
+  bio: `Frontend Developer with ${'3+'} years of experience crafting complex, high-performance web and mobile applications with React.js, Vue.js and the modern JavaScript ecosystem. From enterprise fintech-compliance platforms to AI document pipelines and cross-platform mobile apps, I turn ambitious designs into efficient, reusable component architectures and partner with cross-functional teams to ship polished products on time.`,
   objective: `To leverage my expertise in React.js, Vue.js and modern frontend technologies to build innovative, high-performance web applications while contributing to the success of a dynamic, growth-oriented organization.`,
   email: 'kirtikkoyani6802@gmail.com',
   phone: '+91 97243 67532',
@@ -79,8 +82,8 @@ export const socials: Social[] = [
 
 export const stats = [
   { value: '3+', label: 'Years experience' },
-  { value: '8+', label: 'Products shipped' },
-  { value: '4', label: 'Companies' },
+  { value: '10+', label: 'Products shipped' },
+  { value: '3', label: 'Companies' },
   { value: '2', label: 'Core frameworks' },
 ]
 
@@ -88,22 +91,40 @@ export const skills: SkillGroup[] = [
   {
     category: 'Languages & Core',
     items: ['JavaScript', 'TypeScript', 'HTML5', 'CSS3'],
+    icon: '⌨️',
+  },
+  {
+    category: 'AI & Machine Learning',
+    items: [
+      'RAG Pipelines',
+      'LLM Integration',
+      'Vector Search (pgvector)',
+      'Prompt Engineering',
+      'AI Agents & Tool-calling',
+      'Document AI / OCR (Gemini)',
+    ],
+    icon: '🧠',
+    featured: true,
   },
   {
     category: 'React Ecosystem',
     items: ['React.js', 'Next.js', 'Redux Toolkit', 'Gatsby'],
+    icon: '⚛️',
   },
   {
     category: 'Vue Ecosystem',
     items: ['Vue.js', 'Nuxt.js', 'Vuetify', 'Pinia', 'Vuex', 'Ionic'],
+    icon: '🟢',
   },
   {
     category: 'Styling & Data',
     items: ['Tailwind CSS', 'Node.js', 'GraphQL', 'REST APIs', 'WebSockets'],
+    icon: '🎨',
   },
   {
     category: 'Testing & QA',
     items: ['Cypress', 'Jest', 'Playwright'],
+    icon: '🧪',
   },
 ]
 
@@ -114,16 +135,48 @@ export const experience: ExperienceItem[] = [
     period: 'Present',
     current: true,
     summary:
-      'Building modern, scalable frontend products. Project details to be added — share the name, description and stack and it will appear here.',
+      'Building enterprise SaaS across AI knowledge platforms, document verification and disability services — from RAG chat UIs and dashboards to cross-platform mobile apps.',
     projects: [
       {
-        name: 'Project coming soon',
+        name: 'AI Zone',
         company: '9 Series Pvt Ltd',
         description:
-          'Placeholder for your current 9 Series project. Provide the project name, a short description and the tech stack, and it will be dropped in with the same polished card treatment.',
-        highlights: [],
-        stack: ['React'],
-        glyph: '✦',
+          'An AI-powered document-verification platform with batch ingestion and role-based access, where Gemini / Vertex-AI OCR classifies documents and extracts fields for human verifiers.',
+        highlights: [
+          'AI OCR classification & field extraction (Gemini / Vertex AI)',
+          'Role-based access — Super Admin, Admin & Verifier',
+          'Live work-queue updates over WebSockets, Microsoft SSO',
+        ],
+        stack: ['React 19', 'TypeScript', 'Vite', 'Redux Toolkit', 'MUI'],
+        glyph: '🤖',
+        featured: true,
+      },
+      {
+        name: 'AbleFinder',
+        company: '9 Series Pvt Ltd',
+        description:
+          'A mobile marketplace connecting disability-support participants with service providers — provider discovery, service agreements, subscriptions and push notifications.',
+        highlights: [
+          'Participant ↔ provider matching & service agreements',
+          'Stripe subscriptions & Firebase push notifications',
+          'React Native (Expo) app on a Next.js + PostgreSQL backend',
+        ],
+        stack: ['React Native', 'Expo', 'Next.js', 'Drizzle', 'Stripe'],
+        glyph: '🧩',
+        featured: true,
+      },
+      {
+        name: 'Enterprise Knowledge Assistant',
+        company: '9 Series Pvt Ltd',
+        description:
+          'A multi-tenant SaaS where organizations upload their internal documents and ask questions in natural language — answers are generated only from their own data with inline source citations through a full RAG pipeline.',
+        highlights: [
+          'Retrieval-augmented chat with cited, streaming answers (SSE)',
+          'Multi-format ingestion — PDF, Word, Excel, web & more',
+          'Multi-tenant workspaces with role-based access',
+        ],
+        stack: ['Next.js 15', 'React 19', 'TypeScript', 'TanStack Query', 'Zustand'],
+        glyph: '🧠',
         featured: true,
       },
     ],
@@ -133,7 +186,7 @@ export const experience: ExperienceItem[] = [
     role: 'Frontend Developer',
     period: 'Feb 2024 – Present',
     summary:
-      'Developing real-time trading interfaces and high-performance marketing sites for international clients.',
+      'Developing real-time trading interfaces and enterprise compliance platforms for international clients.',
     projects: [
       {
         name: 'Tread Aries',
@@ -150,16 +203,18 @@ export const experience: ExperienceItem[] = [
         featured: true,
       },
       {
-        name: 'Static Landing Pages',
+        name: 'iBanq Sentinel',
         company: 'Vedlogic Solutions',
         description:
-          'High-performance static marketing and landing pages built with the Gatsby React framework, optimized for speed and SEO.',
+          'A compliance and client-onboarding platform for financial services — multi-tier onboarding/offboarding workflows, document management, real-time chat and embedded analytics.',
         highlights: [
-          'Blazing-fast static generation with Gatsby',
-          'SEO-first architecture and Lighthouse tuning',
+          'Multi-step onboarding, KYC & document workflows',
+          'Real-time chat & notifications over WebSockets',
+          'Embedded Superset analytics with role-based access',
         ],
-        stack: ['Gatsby', 'React', 'GraphQL'],
-        glyph: '🚀',
+        stack: ['React', 'TypeScript', 'Redux Toolkit', 'MUI', 'Tailwind CSS'],
+        glyph: '🛡️',
+        featured: true,
       },
     ],
   },

@@ -35,7 +35,7 @@ export default {
         },
       },
       animation: {
-        'gradient-shift': 'gradient-shift 8s ease infinite',
+        'gradient-shift': 'gradient-shift 6s ease infinite',
         float: 'float 6s ease-in-out infinite',
       },
     },

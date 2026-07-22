@@ -76,7 +76,7 @@ export function Hero() {
             transition={{ duration: 0.6, delay: 0.05 }}
             className="mt-6 font-display text-5xl font-bold leading-[1.05] tracking-tight sm:text-7xl"
           >
-            Hi, I'm <span className="accent-gradient-text">{profile.firstName}</span>
+            Hi, I'm <span className="accent-gradient-text animate-gradient-shift">{profile.firstName}</span>
             <br />
             <span className="text-soft">{profile.role}</span>
           </motion.h1>

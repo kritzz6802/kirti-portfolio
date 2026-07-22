@@ -9,7 +9,7 @@ export function Experience() {
         <SectionHeading
           eyebrow="Career"
           title="Where I've worked"
-          description="Three-plus years shipping products across trading, CMS, construction and fintech domains."
+          description="Three-plus years shipping products across fintech compliance, AI, trading, CMS and cross-platform mobile."
         />
 
         <div className="relative mt-16">
