@@ -1,0 +1,333 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>Kirti Koyani — Frontend Developer</title>
+<style>
+  /* Single A4 sheet. White, mostly monochrome; hairline rules do the structuring. */
+  @page { size: A4; margin: 0; }
+
+  :root {
+    --ink:    #14161c;   /* headings */
+    --body:   #3d4350;   /* body copy */
+    --muted:  #7b8290;   /* labels, dates, meta */
+    --faint:  #9aa1ad;
+    --rule:   #dcdfe6;   /* hairlines */
+    --strong: #2b3242;   /* emphasis, near-black slate */
+  }
+
+  * { box-sizing: border-box; }
+  html { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+
+  body {
+    margin: 0;
+    font-family: "Inter", "Helvetica Neue", Arial, sans-serif;
+    font-size: 8.5pt;
+    line-height: 1.38;
+    color: var(--body);
+    background: #fff;
+  }
+
+  a { color: inherit; text-decoration: none; }
+
+  .sheet { width: 210mm; min-height: 297mm; padding: 13mm 13mm 10mm; }
+
+  /* ===================== HEADER ===================== */
+  header { display: flex; align-items: center; gap: 7mm; padding-bottom: 4mm; }
+
+  .monogram {
+    width: 17mm; height: 17mm; flex: none;
+    border-radius: 50%;
+    border: 0.9pt solid var(--rule);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 13pt; font-weight: 600; letter-spacing: 1px;
+    color: var(--strong);
+  }
+
+  .head-main { flex: 1; min-width: 0; }
+  .name {
+    margin: 0;
+    font-size: 22pt; font-weight: 650; letter-spacing: -0.4px;
+    color: var(--ink); line-height: 1.1;
+  }
+  .role {
+    font-size: 9.4pt; font-weight: 600; letter-spacing: 2.2px; text-transform: uppercase;
+    color: var(--muted); margin-top: 2px;
+  }
+  .contact { margin-top: 3.5mm; font-size: 8.1pt; color: var(--body); }
+  .contact span::after { content: "·"; margin: 0 6px; color: var(--faint); }
+  .contact span:last-child::after { content: ""; margin: 0; }
+
+  .rule-top { height: 1.6pt; background: var(--strong); }
+
+  .profile { padding-top: 4mm; }
+  .profile h2 { margin-bottom: 2.4mm; }
+
+  /* ===================== COLUMNS ===================== */
+  .cols { display: flex; gap: 6mm; padding-top: 4mm; }
+  .col-l { width: 46mm; flex: none; }
+  .col-r { flex: 1; min-width: 0; padding-left: 6mm; border-left: 0.7pt solid var(--rule); }
+
+  h2 {
+    margin: 0 0 3mm;
+    font-size: 7.8pt; font-weight: 700; letter-spacing: 1.8px; text-transform: uppercase;
+    color: var(--ink);
+    padding-bottom: 1.4mm;
+    border-bottom: 0.7pt solid var(--rule);
+  }
+  .block { margin-bottom: 5mm; }
+  .block:last-child { margin-bottom: 0; }
+
+  /* ---- left column ---- */
+  .skill-group { margin-bottom: 2.6mm; }
+  .skill-cat {
+    font-size: 7.2pt; font-weight: 700; letter-spacing: 0.8px; text-transform: uppercase;
+    color: var(--strong); margin-bottom: 0.3mm;
+  }
+  .skill-list { font-size: 8pt; line-height: 1.38; color: var(--body); }
+
+  .edu-d { font-size: 8.4pt; font-weight: 700; color: var(--ink); line-height: 1.25; }
+  .edu-m { font-size: 7.9pt; color: var(--muted); }
+
+  .lang-row { display: flex; justify-content: space-between; align-items: baseline; padding: 0.6mm 0; }
+  .lang-row b { font-weight: 600; color: var(--ink); font-size: 8.2pt; }
+  .lang-row span { font-size: 7.6pt; color: var(--muted); }
+
+  .glance { display: grid; grid-template-columns: 1fr 1fr; gap: 2.4mm 3mm; }
+  .glance b { display: block; font-size: 12pt; font-weight: 650; color: var(--ink); line-height: 1.05; }
+  .glance span { font-size: 6.6pt; letter-spacing: 0.8px; text-transform: uppercase; color: var(--muted); }
+
+  /* ---- right column ---- */
+  .intro { margin: 0 0 2.4mm; text-align: justify; }
+  .focus {
+    font-size: 7.3pt; font-weight: 600; letter-spacing: 1.3px; text-transform: uppercase;
+    color: var(--muted);
+    padding: 2mm 0 0;
+    border-top: 0.7pt solid var(--rule);
+  }
+
+  .job { margin-bottom: 3mm; }
+  .job:last-child { margin-bottom: 0; }
+  .job-meta { display: flex; justify-content: space-between; align-items: baseline; gap: 10px; }
+  .company { font-size: 9.8pt; font-weight: 700; color: var(--ink); line-height: 1.2; }
+  .job-role { font-size: 8.3pt; font-weight: 500; color: var(--muted); letter-spacing: 0.2px; }
+  .period {
+    font-size: 7.6pt; font-weight: 600; letter-spacing: 0.4px; color: var(--strong);
+    white-space: nowrap; font-variant-numeric: tabular-nums;
+  }
+
+  .project { margin-top: 1.7mm; break-inside: avoid; }
+  .p-name { font-weight: 700; color: var(--ink); }
+  .p-desc { color: var(--body); }
+
+  ul { margin: 1mm 0 0.8mm; padding-left: 3.4mm; list-style: none; }
+  li { margin-bottom: 0.3mm; position: relative; }
+  li::before {
+    content: ""; position: absolute; left: -3.4mm; top: 1.35mm;
+    width: 1.1mm; height: 1.1mm; border-radius: 50%; background: var(--faint);
+  }
+
+  .stack { font-size: 7.5pt; color: var(--muted); }
+  .stack-inline { font-size: 7.3pt; color: var(--muted); white-space: nowrap; }
+  .stack b, .stack-inline b {
+    font-size: 6.8pt; font-weight: 700; letter-spacing: 0.9px; text-transform: uppercase;
+    color: var(--strong); margin-right: 2px;
+  }
+</style>
+</head>
+<body>
+
+<div class="sheet">
+
+  <header>
+    <div class="monogram">KK</div>
+    <div class="head-main">
+      <h1 class="name">Kirti Koyani</h1>
+      <div class="role">Frontend Developer</div>
+      <div class="contact">
+        <span>Ahmedabad, India</span>
+        <span>+91 97243 67532</span>
+        <span><a href="mailto:kirtikkoyani6802@gmail.com">kirtikkoyani6802@gmail.com</a></span>
+        <span><a href="https://www.linkedin.com/in/kirti-koyani">in/kirti-koyani</a></span>
+        <span><a href="https://github.com/kirti-koyani">github.com/kirti-koyani</a></span>
+      </div>
+    </div>
+  </header>
+
+  <div class="rule-top"></div>
+
+  <div class="profile">
+    <div>
+      <h2>Profile</h2>
+      <p class="intro">
+          Frontend engineer with 3+ years owning the UI layer of production web and mobile products — enterprise
+          fintech-compliance platforms, AI document pipelines and cross-platform apps. I design reusable component
+          architectures in React and Vue, wire real-time data over WebSockets and SSE, and partner with product,
+          design and backend to ship tested releases on schedule.
+        </p>
+      <div class="focus">Frontend Architecture · Design Systems · Real-time &amp; AI Interfaces</div>
+    </div>
+  </div>
+
+  <div class="cols">
+
+    <!-- ================= LEFT ================= -->
+    <div class="col-l">
+
+      <div class="block">
+        <h2>Technical Skills</h2>
+        <div class="skill-group">
+          <div class="skill-cat">Languages &amp; Core</div>
+          <div class="skill-list">JavaScript · TypeScript · HTML5 · CSS3</div>
+        </div>
+        <div class="skill-group">
+          <div class="skill-cat">React Ecosystem</div>
+          <div class="skill-list">React.js · Next.js · Redux Toolkit · Gatsby · React Native (Expo)</div>
+        </div>
+        <div class="skill-group">
+          <div class="skill-cat">Vue Ecosystem</div>
+          <div class="skill-list">Vue.js · Nuxt.js · Vuetify · Pinia · Vuex · Ionic</div>
+        </div>
+        <div class="skill-group">
+          <div class="skill-cat">AI &amp; Machine Learning</div>
+          <div class="skill-list">RAG pipelines · LLM integration · Vector search (pgvector) · Prompt engineering · AI agents &amp; tool-calling · Document AI / OCR (Gemini)</div>
+        </div>
+        <div class="skill-group">
+          <div class="skill-cat">Styling &amp; Data</div>
+          <div class="skill-list">Tailwind CSS · MUI · Node.js · GraphQL · REST APIs · WebSockets · SSE</div>
+        </div>
+        <div class="skill-group">
+          <div class="skill-cat">Testing &amp; QA</div>
+          <div class="skill-list">Cypress · Jest · Playwright</div>
+        </div>
+      </div>
+
+      <div class="block">
+        <h2>Education</h2>
+        <div class="edu-d">B.E. Computer Science &amp; Engineering</div>
+        <div class="edu-m">Gujarat Technological University</div>
+        <div class="edu-m">2019 – 2022 · CGPA 9.09</div>
+      </div>
+
+      <div class="block">
+        <h2>Languages</h2>
+        <div class="lang-row"><b>English</b><span>Professional</span></div>
+        <div class="lang-row"><b>Hindi</b><span>Fluent</span></div>
+        <div class="lang-row"><b>Gujarati</b><span>Native</span></div>
+      </div>
+
+      <div class="block">
+        <h2>At a Glance</h2>
+        <div class="glance">
+          <div><b>3+</b><span>Years exp</span></div>
+          <div><b>10+</b><span>Products</span></div>
+          <div><b>3</b><span>Companies</span></div>
+          <div><b>2</b><span>Frameworks</span></div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- ================= RIGHT ================= -->
+    <div class="col-r">
+
+      <div class="block">
+        <h2>Experience</h2>
+
+        <div class="job">
+          <div class="job-meta">
+            <div>
+              <div class="company">9 Series Pvt Ltd</div>
+              <div class="job-role">Frontend Developer</div>
+            </div>
+            <div class="period">Present</div>
+          </div>
+
+          <div class="project">
+            <div><span class="p-name">AI Zone</span> <span class="p-desc">— AI-powered document-verification platform with batch ingestion and role-based access.</span></div>
+            <ul>
+              <li>Built OCR classification &amp; field-extraction workflows on Gemini / Vertex AI for human verifiers.</li>
+              <li>Shipped Super Admin / Admin / Verifier access tiers, live work queues over WebSockets, Microsoft SSO.</li>
+            </ul>
+            <div class="stack"><b>Stack</b> React 19 · TypeScript · Vite · Redux Toolkit · MUI</div>
+          </div>
+
+          <div class="project">
+            <div><span class="p-name">Enterprise Knowledge Assistant</span> <span class="p-desc">— Multi-tenant RAG SaaS answering questions from an organisation's own documents.</span></div>
+            <ul>
+              <li>Built retrieval-augmented chat with cited, token-streaming answers over SSE.</li>
+              <li>Handled multi-format ingestion (PDF, Word, Excel, web) and role-based multi-tenant workspaces.</li>
+            </ul>
+            <div class="stack"><b>Stack</b> Next.js 15 · React 19 · TypeScript · TanStack Query · Zustand</div>
+          </div>
+
+          <div class="project">
+            <div><span class="p-name">AbleFinder</span> <span class="p-desc">— Mobile marketplace connecting disability-support participants with service providers.</span></div>
+            <ul>
+              <li>Delivered participant ↔ provider matching, service agreements, Stripe subscriptions and push notifications.</li>
+              <li>Built the React Native (Expo) app against a Next.js + PostgreSQL backend.</li>
+            </ul>
+            <div class="stack"><b>Stack</b> React Native · Expo · Next.js · Drizzle ORM · Stripe</div>
+          </div>
+        </div>
+
+        <div class="job">
+          <div class="job-meta">
+            <div>
+              <div class="company">Vedlogic Solutions Pvt Ltd</div>
+              <div class="job-role">Frontend Developer</div>
+            </div>
+            <div class="period">Feb 2024 – Present</div>
+          </div>
+
+          <div class="project">
+            <div><span class="p-name">iBanq Sentinel</span> <span class="p-desc">— Compliance &amp; client-onboarding platform for financial services.</span></div>
+            <ul>
+              <li>Built multi-tier onboarding/offboarding, KYC and document workflows with real-time chat over WebSockets.</li>
+              <li>Embedded Superset analytics behind role-based access.</li>
+            </ul>
+            <div class="stack"><b>Stack</b> React · TypeScript · Redux Toolkit · MUI · Tailwind CSS</div>
+          </div>
+
+          <div class="project">
+            <div><span class="p-name">Tread Aries</span> <span class="p-desc">— US-markets trading platform for equities and futures/options.</span></div>
+            <ul>
+              <li>Implemented real-time price streaming over WebSockets across data-dense, responsive dashboards.</li>
+            </ul>
+            <div class="stack"><b>Stack</b> Vue.js · Vuex · WebSockets · Streaming APIs</div>
+          </div>
+        </div>
+
+        <div class="job">
+          <div class="job-meta">
+            <div>
+              <div class="company">Nesoi Technology</div>
+              <div class="job-role">Frontend Developer</div>
+            </div>
+            <div class="period">Jun 2022 – Feb 2024</div>
+          </div>
+
+          <div class="project">
+            <div><span class="p-name">Monotype</span> <span class="p-desc">— Led the Vue 2 → Nuxt 3 migration of the India platform for a global fonts provider, rebuilding the data layer on GraphQL.</span> <span class="stack-inline"><b>Stack</b> Vue 3 · Nuxt 3 · GraphQL · Pinia · Jest</span></div>
+          </div>
+
+          <div class="project">
+            <div><span class="p-name">Omni-Cloud</span> <span class="p-desc">— Built the CMS platform UI with a reusable hook-based component library over REST APIs.</span> <span class="stack-inline"><b>Stack</b> React.js · React Hooks · Tailwind CSS · REST APIs</span></div>
+          </div>
+
+          <div class="project">
+            <div><span class="p-name">Planfred</span> <span class="p-desc">— Shipped Vue/Ionic mobile features for a construction PM platform and authored Cypress E2E suites.</span> <span class="stack-inline"><b>Stack</b> Vue.js · Ionic · Nuxt · Cypress</span></div>
+          </div>
+
+          <div class="project">
+            <div><span class="p-name">Sopra</span> <span class="p-desc">— Built the PWA architecture and Redux Toolkit state layer for an Irish car-loan &amp; stock-trading app.</span> <span class="stack-inline"><b>Stack</b> React · Redux Toolkit · TypeScript · React Router</span></div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

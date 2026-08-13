@@ -1,0 +1,479 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>Kirti Koyani — Frontend Developer</title>
+<style>
+  /* Full-bleed pages: each .page owns its own padding so the sidebar can bleed. */
+  @page { size: A4; margin: 0; }
+
+  :root {
+    --ink:        #0d1220;
+    --body:       #363c4e;
+    --muted:      #737b8f;
+    --accent:     #2563eb;
+    --accent-dk:  #1d4ed8;
+    --rule:       #e3e7f0;
+    --chip-bg:    #eef3ff;
+    --chip-br:    #d8e3ff;
+    --side-1:     #0f172a;
+    --side-2:     #1c2942;
+    --side-txt:   #c3cbdc;
+    --side-dim:   #8b96ad;
+    --side-accent:#7fb0ff;
+  }
+
+  * { box-sizing: border-box; }
+
+  html { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+
+  body {
+    margin: 0;
+    font-family: "Inter", "Helvetica Neue", Arial, sans-serif;
+    font-size: 9.2pt;
+    line-height: 1.45;
+    color: var(--body);
+    background: #fff;
+  }
+
+  a { color: inherit; text-decoration: none; }
+
+  /* min-height (not height) so any overflow spills to a visible extra page
+     instead of being silently clipped */
+  .page { position: relative; width: 210mm; min-height: 297mm; }
+  .page + .page { break-before: page; }
+
+  /* ============ PAGE 1 — sidebar + main ============ */
+  .page-1 { display: flex; }
+
+  /* ---- sidebar ---- */
+  aside {
+    position: relative;
+    width: 68mm;
+    flex: none;
+    min-height: 297mm;   /* bleeds to the bottom edge of the sheet */
+    padding: 15mm 9mm 12mm;
+    color: var(--side-txt);
+    background: linear-gradient(165deg, var(--side-1) 0%, var(--side-2) 100%);
+  }
+  /* subtle accent glow so the panel doesn't read as a flat block */
+  aside::after {
+    content: "";
+    position: absolute;
+    right: 0; top: 0; bottom: 0;
+    width: 2.2mm;
+    background: linear-gradient(180deg, var(--accent) 0%, rgba(37,99,235,0) 78%);
+  }
+
+  .monogram {
+    width: 19mm; height: 19mm;
+    border-radius: 50%;
+    border: 1.4pt solid var(--side-accent);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 15pt; font-weight: 700; letter-spacing: 0.5px;
+    color: #fff;
+    margin-bottom: 9mm;
+  }
+
+  .side-h {
+    font-size: 8pt;
+    font-weight: 700;
+    letter-spacing: 1.6px;
+    text-transform: uppercase;
+    color: #fff;
+    margin: 0 0 5px;
+    padding-bottom: 3px;
+    border-bottom: 0.8pt solid rgba(255,255,255,0.18);
+  }
+  .side-block { margin-bottom: 7mm; }
+  .side-block:last-child { margin-bottom: 0; }
+
+  .side-item { margin-bottom: 4px; font-size: 8.4pt; line-height: 1.35; word-break: break-word; }
+  .side-item .lbl { display: block; font-size: 7pt; letter-spacing: 0.9px; text-transform: uppercase; color: var(--side-dim); }
+  .side-item .val { color: #eef2f9; }
+
+  .skill-group { margin-bottom: 4.5px; }
+  .skill-cat { font-size: 7.6pt; font-weight: 700; letter-spacing: 0.6px; text-transform: uppercase; color: var(--side-accent); margin-bottom: 1px; }
+  .skill-list { font-size: 8.2pt; line-height: 1.4; color: #e4e9f3; }
+
+  .edu-d { font-size: 8.6pt; font-weight: 700; color: #fff; line-height: 1.3; }
+  .edu-m { font-size: 7.8pt; color: var(--side-dim); }
+
+  .lang-row { margin-bottom: 4.5px; }
+  .lang-top { display: flex; justify-content: space-between; font-size: 8.2pt; }
+  .lang-top b { color: #fff; font-weight: 600; }
+  .lang-top span { color: var(--side-dim); font-size: 7.6pt; }
+  .bar { height: 2.6pt; border-radius: 2pt; background: rgba(255,255,255,0.14); margin-top: 2px; }
+  .bar i { display: block; height: 100%; border-radius: 2pt; background: linear-gradient(90deg, var(--accent) 0%, var(--side-accent) 100%); }
+
+  /* ---- main column ---- */
+  main { flex: 1; padding: 15mm 12mm 12mm 10mm; min-width: 0; }
+
+  .name { margin: 0; font-size: 27pt; font-weight: 700; letter-spacing: -0.8px; color: var(--ink); line-height: 1.05; }
+  .role-line { display: flex; align-items: center; gap: 7px; margin: 4px 0 9px; }
+  .role-line .role { font-size: 11pt; font-weight: 600; letter-spacing: 0.3px; color: var(--accent); }
+  .role-line .dash { flex: 1; height: 1.6pt; background: linear-gradient(90deg, var(--accent) 0%, rgba(37,99,235,0.06) 100%); }
+
+  h2 {
+    margin: 0 0 6px;
+    font-size: 8.6pt;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--ink);
+  }
+  h2::after { content: ""; display: block; width: 11mm; height: 1.6pt; background: var(--accent); margin-top: 3px; }
+
+  section { margin-bottom: 8mm; }
+  section:last-child { margin-bottom: 0; }
+
+  .summary { margin: 0; text-align: justify; }
+
+  /* ---- experience timeline ---- */
+  .job { position: relative; padding-left: 9mm; margin-bottom: 6mm; }
+  .job:last-child { margin-bottom: 0; }
+  /* rail + dot */
+  .job::before { content: ""; position: absolute; left: 2.1mm; top: 4.2mm; bottom: -3mm; width: 1pt; background: var(--rule); }
+  .job:last-child::before { bottom: 2mm; }
+  .job::after {
+    content: "";
+    position: absolute; left: 0; top: 1.6mm;
+    width: 4.2mm; height: 4.2mm; border-radius: 50%;
+    background: #fff; border: 1.4pt solid var(--accent);
+  }
+  .job.past::after { border-color: #b9c3d6; }
+
+  .company { font-size: 10.6pt; font-weight: 700; color: var(--ink); line-height: 1.25; }
+  .job-meta { display: flex; justify-content: space-between; align-items: baseline; gap: 10px; }
+  .job-role { font-size: 9pt; font-weight: 600; color: var(--accent-dk); }
+  .period {
+    font-size: 7.6pt; font-weight: 600; letter-spacing: 0.4px;
+    color: var(--muted); white-space: nowrap; font-variant-numeric: tabular-nums;
+    background: #f4f6fa; border: 0.7pt solid var(--rule); border-radius: 2mm; padding: 1px 6px;
+  }
+  .job-summary { margin: 3px 0 5px; font-size: 8.7pt; font-style: italic; color: var(--muted); }
+
+  .project { margin-bottom: 4.5mm; break-inside: avoid; }
+  .project:last-child { margin-bottom: 0; }
+  .p-name { font-weight: 700; color: var(--ink); }
+  .p-name::before { content: "▸"; color: var(--accent); margin-right: 4px; font-size: 8pt; }
+  .p-desc { color: var(--body); }
+
+  ul { margin: 2px 0 4px; padding-left: 13px; }
+  li { margin-bottom: 1px; }
+  li::marker { color: var(--accent); }
+
+  .chips { display: flex; flex-wrap: wrap; gap: 3px; }
+  .chip {
+    font-size: 7.4pt; font-weight: 600; letter-spacing: 0.2px;
+    color: var(--accent-dk); background: var(--chip-bg);
+    border: 0.7pt solid var(--chip-br); border-radius: 2.6mm;
+    padding: 0.7px 5px;
+  }
+
+  /* ============ PAGE 2 — continuation ============ */
+  .page-2 { padding: 14mm 14mm 12mm; }
+
+  .cont-head {
+    display: flex; justify-content: space-between; align-items: baseline;
+    border-bottom: 1.6pt solid var(--ink);
+    padding-bottom: 4px; margin-bottom: 6mm;
+  }
+  .cont-name { font-size: 13pt; font-weight: 700; color: var(--ink); letter-spacing: -0.3px; }
+  .cont-name span { color: var(--accent); font-weight: 600; font-size: 10pt; letter-spacing: 0; }
+  .cont-tag { font-size: 8pt; letter-spacing: 1.4px; text-transform: uppercase; color: var(--muted); }
+
+  .page-2 .job { padding-left: 9mm; margin-bottom: 5.5mm; }
+
+  /* ---- closing panel ---- */
+  .closing { margin-top: 6mm; break-inside: avoid; }
+
+  .stats { display: flex; gap: 4mm; margin-bottom: 4mm; }
+  .stat {
+    flex: 1;
+    text-align: center;
+    padding: 3mm 2mm;
+    border: 0.8pt solid var(--rule);
+    border-top: 2pt solid var(--accent);
+    border-radius: 0 0 2mm 2mm;
+    background: #fafbfe;
+  }
+  .stat b { display: block; font-size: 17pt; font-weight: 700; color: var(--ink); line-height: 1.1; letter-spacing: -0.5px; }
+  .stat span { font-size: 7.6pt; letter-spacing: 0.7px; text-transform: uppercase; color: var(--muted); }
+
+  .avail {
+    display: flex; align-items: center; justify-content: space-between; gap: 10px;
+    padding: 3.4mm 6mm;
+    border-radius: 2mm;
+    color: #e8edf7;
+    background: linear-gradient(120deg, var(--side-1) 0%, var(--side-2) 100%);
+  }
+  .avail .a-l { font-size: 10.5pt; font-weight: 700; color: #fff; }
+  .avail .a-s { font-size: 8.2pt; color: var(--side-dim); }
+  .avail .a-r { text-align: right; font-size: 8.4pt; line-height: 1.5; }
+  .avail .a-r b { color: var(--side-accent); font-weight: 600; }
+</style>
+</head>
+<body>
+
+<!-- ============================= PAGE 1 ============================= -->
+<div class="page page-1">
+
+  <aside>
+    <div class="monogram">KK</div>
+
+    <div class="side-block">
+      <div class="side-h">Contact</div>
+      <div class="side-item"><span class="lbl">Phone</span><span class="val">+91 97243 67532</span></div>
+      <div class="side-item"><span class="lbl">Email</span><span class="val"><a href="mailto:kirtikkoyani6802@gmail.com">kirtikkoyani6802@gmail.com</a></span></div>
+      <div class="side-item"><span class="lbl">LinkedIn</span><span class="val"><a href="https://www.linkedin.com/in/kirti-koyani">in/kirti-koyani</a></span></div>
+      <div class="side-item"><span class="lbl">GitHub</span><span class="val"><a href="https://github.com/kirti-koyani">kirti-koyani</a></span></div>
+      <div class="side-item"><span class="lbl">Location</span><span class="val">Ahmedabad, India</span></div>
+    </div>
+
+    <div class="side-block">
+      <div class="side-h">Skills</div>
+
+      <div class="skill-group">
+        <div class="skill-cat">Languages &amp; Core</div>
+        <div class="skill-list">JavaScript · TypeScript · HTML5 · CSS3</div>
+      </div>
+      <div class="skill-group">
+        <div class="skill-cat">React Ecosystem</div>
+        <div class="skill-list">React.js · Next.js · Redux Toolkit · Gatsby · React Native (Expo)</div>
+      </div>
+      <div class="skill-group">
+        <div class="skill-cat">Vue Ecosystem</div>
+        <div class="skill-list">Vue.js · Nuxt.js · Vuetify · Pinia · Vuex · Ionic</div>
+      </div>
+      <div class="skill-group">
+        <div class="skill-cat">AI &amp; Machine Learning</div>
+        <div class="skill-list">RAG pipelines · LLM integration · Vector search (pgvector) · Prompt engineering · AI agents &amp; tool-calling · Document AI / OCR (Gemini)</div>
+      </div>
+      <div class="skill-group">
+        <div class="skill-cat">Styling &amp; Data</div>
+        <div class="skill-list">Tailwind CSS · MUI · Node.js · GraphQL · REST APIs · WebSockets · SSE</div>
+      </div>
+      <div class="skill-group">
+        <div class="skill-cat">Testing &amp; QA</div>
+        <div class="skill-list">Cypress · Jest · Playwright</div>
+      </div>
+    </div>
+
+    <div class="side-block">
+      <div class="side-h">Education</div>
+      <div class="edu-d">B.E. Computer Science &amp; Engineering</div>
+      <div class="edu-m">Gujarat Technological University</div>
+      <div class="edu-m">2019 – 2022 · CGPA 9.09</div>
+    </div>
+
+    <div class="side-block">
+      <div class="side-h">Languages</div>
+      <div class="lang-row">
+        <div class="lang-top"><b>English</b><span>Professional</span></div>
+        <div class="bar"><i style="width:90%"></i></div>
+      </div>
+      <div class="lang-row">
+        <div class="lang-top"><b>Hindi</b><span>Fluent</span></div>
+        <div class="bar"><i style="width:95%"></i></div>
+      </div>
+      <div class="lang-row">
+        <div class="lang-top"><b>Gujarati</b><span>Native</span></div>
+        <div class="bar"><i style="width:100%"></i></div>
+      </div>
+    </div>
+  </aside>
+
+  <main>
+    <h1 class="name">Kirti Koyani</h1>
+    <div class="role-line">
+      <span class="role">Frontend Developer</span>
+      <span class="dash"></span>
+    </div>
+
+    <section>
+      <h2>Profile</h2>
+      <p class="summary">
+        Frontend Developer with 3+ years of experience crafting complex, high-performance web and mobile
+        applications with React.js, Vue.js and the modern JavaScript ecosystem. From enterprise
+        fintech-compliance platforms to AI document pipelines and cross-platform mobile apps, I turn
+        ambitious designs into efficient, reusable component architectures and partner with cross-functional
+        teams to ship polished products on time.
+      </p>
+    </section>
+
+    <section>
+      <h2>Experience</h2>
+
+      <div class="job">
+        <div class="job-meta">
+          <div class="company">9 Series Pvt Ltd</div>
+          <div class="period">Present</div>
+        </div>
+        <div class="job-role">Frontend Developer</div>
+        <p class="job-summary">
+          Building enterprise SaaS across AI knowledge platforms, document verification and disability
+          services — from RAG chat UIs and dashboards to cross-platform mobile apps.
+        </p>
+
+        <div class="project">
+          <div><span class="p-name">AI Zone</span> <span class="p-desc">— An AI-powered document-verification platform with batch ingestion and role-based access, where Gemini / Vertex-AI OCR classifies documents and extracts fields for human verifiers.</span></div>
+          <ul>
+            <li>Built AI OCR classification &amp; field-extraction workflows on Gemini / Vertex AI.</li>
+            <li>Implemented role-based access for Super Admin, Admin and Verifier personas.</li>
+            <li>Delivered live work-queue updates over WebSockets with Microsoft SSO sign-in.</li>
+          </ul>
+          <div class="chips">
+            <span class="chip">React 19</span><span class="chip">TypeScript</span><span class="chip">Vite</span><span class="chip">Redux Toolkit</span><span class="chip">MUI</span>
+          </div>
+        </div>
+
+        <div class="project">
+          <div><span class="p-name">Enterprise Knowledge Assistant</span> <span class="p-desc">— A multi-tenant SaaS where organizations upload internal documents and ask questions in natural language, answered only from their own data with inline source citations through a full RAG pipeline.</span></div>
+          <ul>
+            <li>Built retrieval-augmented chat with cited, token-streaming answers over SSE.</li>
+            <li>Supported multi-format ingestion — PDF, Word, Excel, web pages and more.</li>
+            <li>Shipped multi-tenant workspaces with role-based access control.</li>
+          </ul>
+          <div class="chips">
+            <span class="chip">Next.js 15</span><span class="chip">React 19</span><span class="chip">TypeScript</span><span class="chip">TanStack Query</span><span class="chip">Zustand</span>
+          </div>
+        </div>
+
+        <div class="project">
+          <div><span class="p-name">AbleFinder</span> <span class="p-desc">— A mobile marketplace connecting disability-support participants with service providers — provider discovery, service agreements, subscriptions and push notifications.</span></div>
+          <ul>
+            <li>Implemented participant ↔ provider matching and service-agreement flows.</li>
+            <li>Integrated Stripe subscriptions and Firebase push notifications.</li>
+            <li>Developed the React Native (Expo) app against a Next.js + PostgreSQL backend.</li>
+          </ul>
+          <div class="chips">
+            <span class="chip">React Native</span><span class="chip">Expo</span><span class="chip">Next.js</span><span class="chip">Drizzle ORM</span><span class="chip">Stripe</span>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+</div>
+
+<!-- ============================= PAGE 2 ============================= -->
+<div class="page page-2">
+
+  <div class="cont-head">
+    <div class="cont-name">Kirti Koyani <span>· Frontend Developer</span></div>
+    <div class="cont-tag">Experience — continued</div>
+  </div>
+
+  <div class="job">
+    <div class="job-meta">
+      <div class="company">Vedlogic Solutions Pvt Ltd</div>
+      <div class="period">Feb 2024 – Present</div>
+    </div>
+    <div class="job-role">Frontend Developer</div>
+    <p class="job-summary">
+      Developed real-time trading interfaces and enterprise compliance platforms for international clients.
+    </p>
+
+    <div class="project">
+      <div><span class="p-name">iBanq Sentinel</span> <span class="p-desc">— A compliance and client-onboarding platform for financial services — multi-tier onboarding/offboarding workflows, document management, real-time chat and embedded analytics.</span></div>
+      <ul>
+        <li>Built multi-step onboarding, KYC and document-management workflows.</li>
+        <li>Delivered real-time chat and notifications over WebSockets.</li>
+        <li>Embedded Superset analytics behind role-based access.</li>
+      </ul>
+      <div class="chips">
+        <span class="chip">React</span><span class="chip">TypeScript</span><span class="chip">Redux Toolkit</span><span class="chip">MUI</span><span class="chip">Tailwind CSS</span>
+      </div>
+    </div>
+
+    <div class="project">
+      <div><span class="p-name">Tread Aries</span> <span class="p-desc">— A stock-trading platform for US markets supporting equities and futures/options trading, powered by real-time streaming price data.</span></div>
+      <ul>
+        <li>Implemented real-time price streaming over WebSockets.</li>
+        <li>Built equities and futures/options trading flows.</li>
+        <li>Designed responsive, data-dense trading dashboards.</li>
+      </ul>
+      <div class="chips">
+        <span class="chip">Vue.js</span><span class="chip">Vuex</span><span class="chip">WebSockets</span><span class="chip">Streaming APIs</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="job past">
+    <div class="job-meta">
+      <div class="company">Nesoi Technology</div>
+      <div class="period">Jun 2022 – Feb 2024</div>
+    </div>
+    <div class="job-role">Frontend Developer</div>
+    <p class="job-summary">
+      Delivered products across the full modern JS stack — from React CMS platforms to large-scale
+      Vue-to-Nuxt migrations and cross-platform mobile apps.
+    </p>
+
+    <div class="project">
+      <div><span class="p-name">Monotype</span> <span class="p-desc">— A leading provider of fonts and creative technologies; migrated their India project from a Vue 2 codebase to Nuxt 3, using GraphQL APIs to fetch and render data.</span></div>
+      <ul>
+        <li>Led the Vue 2 → Nuxt 3 migration and rebuilt the data layer on GraphQL.</li>
+        <li>Covered the migrated components with Jest unit tests.</li>
+      </ul>
+      <div class="chips">
+        <span class="chip">Vue 3</span><span class="chip">Nuxt 3</span><span class="chip">GraphQL</span><span class="chip">Pinia</span><span class="chip">Jest</span>
+      </div>
+    </div>
+
+    <div class="project">
+      <div><span class="p-name">Omni-Cloud</span> <span class="p-desc">— A CMS for web-building software management; built the platform UI with React and Tailwind CSS.</span></div>
+      <ul>
+        <li>Authored a reusable hook-based component library.</li>
+        <li>Integrated REST APIs across the platform.</li>
+      </ul>
+      <div class="chips">
+        <span class="chip">React.js</span><span class="chip">React Hooks</span><span class="chip">Tailwind CSS</span><span class="chip">REST APIs</span>
+      </div>
+    </div>
+
+    <div class="project">
+      <div><span class="p-name">Planfred</span> <span class="p-desc">— A construction project-management platform for organizing plans, documents and to-dos across teams.</span></div>
+      <ul>
+        <li>Shipped new mobile-app features with Vue and Ionic; fixed Vue 3 web-app defects.</li>
+        <li>Authored comprehensive Cypress end-to-end test suites.</li>
+      </ul>
+      <div class="chips">
+        <span class="chip">Vue.js</span><span class="chip">Ionic</span><span class="chip">Nuxt</span><span class="chip">Cypress</span>
+      </div>
+    </div>
+
+    <div class="project">
+      <div><span class="p-name">Sopra</span> <span class="p-desc">— An Irish PWA where dealers create loans and stock-list loans, and users apply for car loans and buy stocks.</span></div>
+      <ul>
+        <li>Built the progressive-web-app architecture with a Redux Toolkit state layer.</li>
+      </ul>
+      <div class="chips">
+        <span class="chip">React</span><span class="chip">Redux Toolkit</span><span class="chip">TypeScript</span><span class="chip">React Router</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="closing">
+    <div class="stats">
+      <div class="stat"><b>3+</b><span>Years experience</span></div>
+      <div class="stat"><b>10+</b><span>Products shipped</span></div>
+      <div class="stat"><b>3</b><span>Companies</span></div>
+      <div class="stat"><b>2</b><span>Core frameworks</span></div>
+    </div>
+
+    <div class="avail">
+      <div>
+        <div class="a-l">Open to new opportunities</div>
+        <div class="a-s">Ahmedabad, India · Remote &amp; hybrid friendly</div>
+      </div>
+      <div class="a-r">
+        <div><b>kirtikkoyani6802@gmail.com</b></div>
+        <div>+91 97243 67532 · in/kirti-koyani</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

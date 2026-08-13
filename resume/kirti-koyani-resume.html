@@ -1,0 +1,310 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>Kirti Koyani — Frontend Developer</title>
+<style>
+  @page { size: A4; margin: 12mm 13mm; }
+
+  :root {
+    --ink:      #14171f;
+    --body:     #33384a;
+    --muted:    #6a7184;
+    --accent:   #2563eb;
+    --rule:     #dfe3ec;
+    --chip-bg:  #f2f5fa;
+  }
+
+  * { box-sizing: border-box; }
+
+  html { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+
+  body {
+    margin: 0;
+    font-family: "Inter", "Helvetica Neue", Arial, sans-serif;
+    font-size: 9.4pt;
+    line-height: 1.45;
+    color: var(--body);
+    background: #fff;
+  }
+
+  a { color: var(--accent); text-decoration: none; }
+
+  /* ---------- header ---------- */
+  header { border-bottom: 2px solid var(--ink); padding-bottom: 8px; margin-bottom: 12px; }
+
+  h1 {
+    margin: 0;
+    font-size: 25pt;
+    letter-spacing: -0.6px;
+    font-weight: 700;
+    color: var(--ink);
+  }
+
+  .role {
+    margin: 2px 0 7px;
+    font-size: 11pt;
+    font-weight: 600;
+    color: var(--accent);
+    letter-spacing: 0.2px;
+  }
+
+  .contact {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 3px 10px;
+    font-size: 8.7pt;
+    color: var(--muted);
+  }
+  .contact span::after { content: "•"; margin-left: 10px; color: #c3c9d6; }
+  .contact span:last-child::after { content: ""; margin: 0; }
+
+  /* ---------- sections ---------- */
+  section { margin-bottom: 11px; }
+
+  h2 {
+    margin: 0 0 6px;
+    font-size: 9pt;
+    font-weight: 700;
+    letter-spacing: 1.3px;
+    text-transform: uppercase;
+    color: var(--ink);
+    border-bottom: 1px solid var(--rule);
+    padding-bottom: 3px;
+  }
+
+  .summary { margin: 0; text-align: justify; }
+
+  /* ---------- skills ---------- */
+  .skills { display: grid; grid-template-columns: 128px 1fr; gap: 3px 10px; }
+  .skills dt { font-weight: 650; color: var(--ink); font-size: 8.9pt; }
+  .skills dd { margin: 0; }
+
+  /* ---------- experience ---------- */
+  /* Jobs may split across pages (projects never do) so page 1 fills out */
+  .job { margin-bottom: 9px; }
+  .job:last-child { margin-bottom: 0; }
+
+  .job-head {
+    break-after: avoid;
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 12px;
+  }
+  .company { font-size: 10.4pt; font-weight: 700; color: var(--ink); }
+  .job-role { font-weight: 600; color: var(--body); }
+  .period { font-size: 8.5pt; color: var(--muted); white-space: nowrap; font-variant-numeric: tabular-nums; }
+
+  .job-summary { margin: 2px 0 5px; color: var(--muted); font-style: italic; font-size: 8.9pt; }
+
+  .project { margin: 0 0 6px 0; padding-left: 9px; border-left: 2px solid var(--rule); break-inside: avoid; }
+  .project:last-child { margin-bottom: 0; }
+
+  .p-name { font-weight: 700; color: var(--ink); }
+  .p-desc { display: inline; }
+
+  ul { margin: 2px 0 3px; padding-left: 15px; }
+  li { margin-bottom: 1px; }
+  li::marker { color: var(--accent); }
+
+  .stack { font-size: 8.3pt; color: var(--muted); }
+  .stack b { color: var(--body); font-weight: 650; }
+
+  /* ---------- footer blocks ---------- */
+  .two-col { display: grid; grid-template-columns: 1.35fr 1fr; gap: 18px; }
+
+  .edu-degree { font-weight: 700; color: var(--ink); }
+  .edu-meta { font-size: 8.7pt; color: var(--muted); }
+
+  .lang { display: flex; justify-content: space-between; padding: 1px 0; }
+  .lang b { color: var(--ink); font-weight: 600; }
+  .lang span { color: var(--muted); font-size: 8.7pt; }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>Kirti Koyani</h1>
+  <p class="role">Frontend Developer</p>
+  <div class="contact">
+    <span>Ahmedabad, India</span>
+    <span>+91 97243 67532</span>
+    <span><a href="mailto:kirtikkoyani6802@gmail.com">kirtikkoyani6802@gmail.com</a></span>
+    <span><a href="https://www.linkedin.com/in/kirti-koyani">linkedin.com/in/kirti-koyani</a></span>
+    <span><a href="https://github.com/kirti-koyani">github.com/kirti-koyani</a></span>
+  </div>
+</header>
+
+<section>
+  <h2>Profile</h2>
+  <p class="summary">
+    Frontend Developer with 3+ years of experience crafting complex, high-performance web and mobile
+    applications with React.js, Vue.js and the modern JavaScript ecosystem. From enterprise
+    fintech-compliance platforms to AI document pipelines and cross-platform mobile apps, I turn ambitious
+    designs into efficient, reusable component architectures and partner with cross-functional teams to
+    ship polished products on time.
+  </p>
+</section>
+
+<section>
+  <h2>Technical Skills</h2>
+  <dl class="skills">
+    <dt>Languages &amp; Core</dt>
+    <dd>JavaScript, TypeScript, HTML5, CSS3</dd>
+
+    <dt>React Ecosystem</dt>
+    <dd>React.js, Next.js, Redux Toolkit, Gatsby, React Native (Expo)</dd>
+
+    <dt>Vue Ecosystem</dt>
+    <dd>Vue.js, Nuxt.js, Vuetify, Pinia, Vuex, Ionic</dd>
+
+    <dt>AI &amp; ML</dt>
+    <dd>RAG pipelines, LLM integration, vector search (pgvector), prompt engineering, AI agents &amp; tool-calling, Document AI / OCR (Gemini)</dd>
+
+    <dt>Styling &amp; Data</dt>
+    <dd>Tailwind CSS, MUI, Node.js, GraphQL, REST APIs, WebSockets, SSE</dd>
+
+    <dt>Testing &amp; QA</dt>
+    <dd>Cypress, Jest, Playwright</dd>
+  </dl>
+</section>
+
+<section>
+  <h2>Professional Experience</h2>
+
+  <div class="job">
+    <div class="job-head">
+      <div><span class="company">9 Series Pvt Ltd</span> — <span class="job-role">Frontend Developer</span></div>
+      <div class="period">Present</div>
+    </div>
+    <p class="job-summary">
+      Building enterprise SaaS across AI knowledge platforms, document verification and disability
+      services — from RAG chat UIs and dashboards to cross-platform mobile apps.
+    </p>
+
+    <div class="project">
+      <div><span class="p-name">AI Zone</span> — <span class="p-desc">An AI-powered document-verification platform with batch ingestion and role-based access, where Gemini / Vertex-AI OCR classifies documents and extracts fields for human verifiers.</span></div>
+      <ul>
+        <li>Built AI OCR classification &amp; field-extraction workflows on Gemini / Vertex AI.</li>
+        <li>Implemented role-based access for Super Admin, Admin and Verifier personas.</li>
+        <li>Delivered live work-queue updates over WebSockets with Microsoft SSO sign-in.</li>
+      </ul>
+      <div class="stack"><b>Stack:</b> React 19, TypeScript, Vite, Redux Toolkit, MUI</div>
+    </div>
+
+    <div class="project">
+      <div><span class="p-name">Enterprise Knowledge Assistant</span> — <span class="p-desc">A multi-tenant SaaS where organizations upload internal documents and ask questions in natural language, answered only from their own data with inline source citations through a full RAG pipeline.</span></div>
+      <ul>
+        <li>Built retrieval-augmented chat with cited, token-streaming answers over SSE.</li>
+        <li>Supported multi-format ingestion — PDF, Word, Excel, web pages and more.</li>
+        <li>Shipped multi-tenant workspaces with role-based access control.</li>
+      </ul>
+      <div class="stack"><b>Stack:</b> Next.js 15, React 19, TypeScript, TanStack Query, Zustand</div>
+    </div>
+
+    <div class="project">
+      <div><span class="p-name">AbleFinder</span> — <span class="p-desc">A mobile marketplace connecting disability-support participants with service providers — provider discovery, service agreements, subscriptions and push notifications.</span></div>
+      <ul>
+        <li>Implemented participant ↔ provider matching and service-agreement flows.</li>
+        <li>Integrated Stripe subscriptions and Firebase push notifications.</li>
+        <li>Developed the React Native (Expo) app against a Next.js + PostgreSQL backend.</li>
+      </ul>
+      <div class="stack"><b>Stack:</b> React Native, Expo, Next.js, Drizzle ORM, Stripe</div>
+    </div>
+  </div>
+
+  <div class="job">
+    <div class="job-head">
+      <div><span class="company">Vedlogic Solutions Pvt Ltd</span> — <span class="job-role">Frontend Developer</span></div>
+      <div class="period">Feb 2024 – Present</div>
+    </div>
+    <p class="job-summary">
+      Developed real-time trading interfaces and enterprise compliance platforms for international clients.
+    </p>
+
+    <div class="project">
+      <div><span class="p-name">iBanq Sentinel</span> — <span class="p-desc">A compliance and client-onboarding platform for financial services — multi-tier onboarding/offboarding workflows, document management, real-time chat and embedded analytics.</span></div>
+      <ul>
+        <li>Built multi-step onboarding, KYC and document-management workflows.</li>
+        <li>Delivered real-time chat and notifications over WebSockets.</li>
+        <li>Embedded Superset analytics behind role-based access.</li>
+      </ul>
+      <div class="stack"><b>Stack:</b> React, TypeScript, Redux Toolkit, MUI, Tailwind CSS</div>
+    </div>
+
+    <div class="project">
+      <div><span class="p-name">Tread Aries</span> — <span class="p-desc">A stock-trading platform for US markets supporting equities and futures/options trading, powered by real-time streaming price data.</span></div>
+      <ul>
+        <li>Implemented real-time price streaming over WebSockets.</li>
+        <li>Built equities and futures/options trading flows.</li>
+        <li>Designed responsive, data-dense trading dashboards.</li>
+      </ul>
+      <div class="stack"><b>Stack:</b> Vue.js, Vuex, WebSockets, streaming APIs</div>
+    </div>
+  </div>
+
+  <div class="job">
+    <div class="job-head">
+      <div><span class="company">Nesoi Technology</span> — <span class="job-role">Frontend Developer</span></div>
+      <div class="period">Jun 2022 – Feb 2024</div>
+    </div>
+    <p class="job-summary">
+      Delivered products across the full modern JS stack — from React CMS platforms to large-scale
+      Vue-to-Nuxt migrations and cross-platform mobile apps.
+    </p>
+
+    <div class="project">
+      <div><span class="p-name">Monotype</span> — <span class="p-desc">A leading provider of fonts and creative technologies; migrated their India project from a Vue 2 codebase to Nuxt 3, using GraphQL APIs to fetch and render data.</span></div>
+      <ul>
+        <li>Led the Vue 2 → Nuxt 3 migration and rebuilt the data layer on GraphQL.</li>
+        <li>Covered the migrated components with Jest unit tests.</li>
+      </ul>
+      <div class="stack"><b>Stack:</b> Vue 3, Nuxt 3, GraphQL, Pinia, Jest</div>
+    </div>
+
+    <div class="project">
+      <div><span class="p-name">Omni-Cloud</span> — <span class="p-desc">A CMS for web-building software management; built the platform UI with React and Tailwind CSS.</span></div>
+      <ul>
+        <li>Authored a reusable hook-based component library.</li>
+        <li>Integrated REST APIs across the platform.</li>
+      </ul>
+      <div class="stack"><b>Stack:</b> React.js, React Hooks, Tailwind CSS, REST APIs</div>
+    </div>
+
+    <div class="project">
+      <div><span class="p-name">Planfred</span> — <span class="p-desc">A construction project-management platform for organizing plans, documents and to-dos across teams.</span></div>
+      <ul>
+        <li>Shipped new mobile-app features with Vue and Ionic; fixed Vue 3 web-app defects.</li>
+        <li>Authored comprehensive Cypress end-to-end test suites.</li>
+      </ul>
+      <div class="stack"><b>Stack:</b> Vue.js, Ionic, Nuxt, Cypress</div>
+    </div>
+
+    <div class="project">
+      <div><span class="p-name">Sopra</span> — <span class="p-desc">An Irish PWA where dealers create loans and stock-list loans, and users apply for car loans and buy stocks.</span></div>
+      <ul>
+        <li>Built the progressive-web-app architecture with a Redux Toolkit state layer.</li>
+      </ul>
+      <div class="stack"><b>Stack:</b> React, Redux Toolkit, TypeScript, React Router</div>
+    </div>
+  </div>
+</section>
+
+<div class="two-col">
+  <section>
+    <h2>Education</h2>
+    <div class="edu-degree">B.E. Computer Science &amp; Engineering</div>
+    <div class="edu-meta">Gujarat Technological University · 2019 – 2022 · CGPA 9.09</div>
+  </section>
+
+  <section>
+    <h2>Languages</h2>
+    <div class="lang"><b>English</b><span>Professional</span></div>
+    <div class="lang"><b>Hindi</b><span>Fluent</span></div>
+    <div class="lang"><b>Gujarati</b><span>Native</span></div>
+  </section>
+</div>
+
+</body>
+</html>

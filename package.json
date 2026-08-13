@@ -9,7 +9,8 @@
     "dev": "vite",
     "build": "tsc -b && vite build",
     "preview": "vite preview",
-    "lint": "eslint ."
+    "lint": "eslint .",
+    "resume": "bash resume/build.sh"
   },
   "dependencies": {
     "framer-motion": "^11.3.19",
