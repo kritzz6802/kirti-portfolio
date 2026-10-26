@@ -1,11 +1,38 @@
-import { defineConfig } from 'vite'
+import { defineConfig, type Connect, type Plugin } from 'vite'
 import react from '@vitejs/plugin-react'
+
+// The invitations are standalone static pages in public/invitation/, public/invitation2/
+// and public/invitation3/. Vite's SPA fallback would otherwise answer them with the
+// portfolio's index.html.
+const STATIC_PAGES = ['/invitation', '/invitation2', '/invitation3']
+
+function invitationRoute(): Plugin {
+  // Typed loosely: this project has no @types/node, so Connect's request type has no `url`
+  const route: Connect.NextHandleFunction = (rawReq, res, next) => {
+    const req = rawReq as { url?: string }
+    const [path, query = ''] = (req.url ?? '').split('?')
+    const suffix = query ? `?${query}` : ''
+    if (STATIC_PAGES.indexOf(path) !== -1) {
+      res.statusCode = 301
+      res.setHeader('Location', `${path}/${suffix}`)
+      res.end()
+      return
+    }
+    if (path.slice(-1) === '/' && STATIC_PAGES.indexOf(path.slice(0, -1)) !== -1) req.url = `${path}index.html${suffix}`
+    next()
+  }
+  return {
+    name: 'invitation-route',
+    configureServer: (server) => void server.middlewares.use(route),
+    configurePreviewServer: (server) => void server.middlewares.use(route),
+  }
+}
 
 // https://vitejs.dev/config/
 export default defineConfig({
   // Absolute base for Netlify / root-domain hosting
   base: '/',
-  plugins: [react()],
+  plugins: [react(), invitationRoute()],
   build: {
     target: 'es2020',
     cssCodeSplit: true,
