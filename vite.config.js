@@ -1,7 +1,7 @@
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
-// The invitations are standalone static pages in public/invitation/,
-// public/invitation2/ and public/invitation3/. Vite's SPA fallback would otherwise answer them with the
+// The invitations are standalone static pages in public/invitation/, public/invitation2/
+// and public/invitation3/. Vite's SPA fallback would otherwise answer them with the
 // portfolio's index.html.
 var STATIC_PAGES = ['/invitation', '/invitation2', '/invitation3'];
 function invitationRoute() {
