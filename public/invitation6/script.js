@@ -1,673 +1,396 @@
 /* =============================================================================
-   Royal wedding invitation — content, timeline and playback
-   Edit `invitationData` below; every visible value is read from it.
-   Lines marked PLACEHOLDER still need the real details.
+   Written in the Stars — constellation opening, then the invitation as stories.
+   Content lives in core.js (invitationData).
    ========================================================================== */
 
 'use strict'
 
-/* ---------------------------------------------------------------- content
-   Dates are YYYY-MM-DD and times 24-hour HH:MM, in the venue's local time. */
-const invitationData = {
-  bride: { name: 'Kirti', surname: 'Koyani' },
-  groom: { name: 'Dharmil', surname: 'Jarsaniya' },
-  brideFirst: true, // Kirti & Dharmil
-  monogram: ['D', 'K'], // letters in the logo crest: intro and door seal
-  introLine: 'Wedding Invitation',
+const F = buildFields()
+const STORY_MS = 7500 // per slide; the celebrations slide gets longer
+const STAR = 'M0 -9 C1 -2 2 -1 9 0 C2 1 1 2 0 9 C-1 2 -2 1 -9 0 C-2 -1 -1 -2 0 -9Z'
 
-  showGanesha: true,
-  blessing: 'श्री गणेशाय नमः',
-  openingMessage: 'Together with their families',
-  inviteLine: 'request the pleasure of your company to celebrate their wedding',
+/* ---------------------------------------------------------------- night sky (canvas) */
+function createSky(canvas) {
+  const ctx = canvas.getContext('2d')
+  let stars = []
+  let w = 0
+  let h = 0
+  let raf = 0
+  let shoot = null
+  let nextShoot = 0
 
-  date: '2027-02-12', // PLACEHOLDER — wedding date
-  time: '19:30', // PLACEHOLDER — muhurat / start time
-  utcOffset: '+05:30', // India; used by the countdown
-
-  venue: 'Your Venue Name', // PLACEHOLDER
-  city: 'Your City', // PLACEHOLDER
-  address: 'Full venue address', // PLACEHOLDER
-  mapUrl: '', // leave empty to search the venue on Google Maps
-
-  familiesEyebrow: 'With the blessings of our elders',
-  familiesMessage: 'We joyfully invite you and your family to grace the wedding of our children and bless the couple as they begin their new life together.',
-  families: [
-    { label: 'Bride’s Family', names: ['Kishorbhai Vajubhai Koyani', '& Dimpleben Kishorbhai Koyani'] },
-    { label: 'Groom’s Family', names: ['Manojbhai Premjibhai Jarsaniya', '& Naynaben Manojbhai Jarsaniya'] },
-  ],
-
-  // Leave date / time / venue empty to show "Details to follow". Delete an entry to drop that function.
-  functions: [
-    { name: 'Ganesh Sthapana', icon: 'kalash', date: '', time: '', venue: '', dress: '' }, // PLACEHOLDER
-    { name: 'Mehendi', icon: 'mehendi', date: '', time: '', venue: '', dress: '' }, // PLACEHOLDER
-    { name: 'Haldi', icon: 'haldi', date: '', time: '', venue: '', dress: '' }, // PLACEHOLDER
-    { name: 'Sangeet Sandhya', icon: 'sangeet', date: '', time: '', venue: '', dress: '' }, // PLACEHOLDER
-    { name: 'Wedding Ceremony', icon: 'mandap', main: true, dress: '' }, // uses the main date, time and venue
-    { name: 'Reception', icon: 'reception', date: '', time: '', venue: '', dress: '' }, // PLACEHOLDER
-  ],
-
-  // Empty list = section hidden
-  story: [
-    'PLACEHOLDER — a line about how you met.', // PLACEHOLDER
-    'PLACEHOLDER — a line about the moment you knew.', // PLACEHOLDER
-    'And now, with the blessings of our families, forever begins.',
-  ],
-
-  hotels: [
-    { name: 'Hotel name', note: 'A short note — distance, special rate', url: '' }, // PLACEHOLDER
-  ],
-
-  gift: {
-    text: 'Your presence and blessings are the most precious gift to us.',
-    button: 'View gift details',
-    url: '', // the button is hidden until this is set
-  },
-
-  rsvpBy: '2027-01-20', // PLACEHOLDER
-  rsvpWhatsApp: '', // PLACEHOLDER — digits with country code, e.g. '919800000000'
-  contacts: [
-    { name: 'Contact name', phone: '' }, // PLACEHOLDER
-  ],
-  closingMessage: 'We look forward to celebrating with you',
-
-  music: {
-    src: 'assets/audio/wedding-loop.mp3', // original loop (scripts/invitation-music.py); swap in your own file here
-    volume: 0.6,
-  },
-
-  autoTour: true, // after the reveal, glide through every section
-}
-
-/* ---------------------------------------------------------------- timing (ms from the tap) */
-const TIMELINE = {
-  tap: 0, // the seal glows
-  light: 450, // a line of light opens down the seam
-  doors: 1000, // doors swing inward, petals burst out
-  through: 2700, // light floods, the camera moves through the arch
-  card: 3400, // frame, corners, flowers and Ganesha draw in
-  text: 4500, // names are written in gold, then date and venue
-  ready: 10000, // scrolling unlocked, controls in
-  tour: 12000,
-}
-
-const TIMELINE_REDUCED = { tap: 0, light: 50, doors: 100, through: 300, card: 500, text: 700, ready: 1500, tour: null }
-
-// The DK crest that opens the page, before the doors
-const INTRO = { draw: 150, docked: 4600, done: 6000 }
-const INTRO_REDUCED = { draw: 0, docked: 1200, done: 1700 }
-
-/* ---------------------------------------------------------------- helpers */
-const $ = (sel, root = document) => root.querySelector(sel)
-const $$ = (sel, root = document) => [...root.querySelectorAll(sel)]
-
-const MONTHS = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
-const WEEKDAYS = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']
-
-// Calendar dates are read as UTC parts, so no local timezone can shift them
-function parseDay(iso) {
-  const [y, m, d] = iso.split('-').map(Number)
-  return new Date(Date.UTC(y, m - 1, d))
-}
-
-function longDate(day) {
-  return `${day.getUTCDate()} ${MONTHS[day.getUTCMonth()]} ${day.getUTCFullYear()}`
-}
-
-function fullDate(iso) {
-  const day = parseDay(iso)
-  return `${WEEKDAYS[day.getUTCDay()]}, ${longDate(day)}`
-}
-
-function clockLabel(hhmm) {
-  const [h, m] = hhmm.split(':').map(Number)
-  return `${((h + 11) % 12) + 1}:${String(m).padStart(2, '0')} ${h >= 12 ? 'PM' : 'AM'}`
-}
-
-function escapeHtml(s) {
-  return String(s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c])
-}
-
-const rand = (a, b) => a + Math.random() * (b - a)
-
-/* ---------------------------------------------------------------- derived fields */
-function buildFields(d) {
-  const day = parseDay(d.date)
-  const [first, second] = d.brideFirst ? [d.bride, d.groom] : [d.groom, d.bride]
-  const digits = String(d.rsvpWhatsApp || '').replace(/\D/g, '')
-  return {
-    ...d,
-    firstName: first.name,
-    firstSurname: first.surname,
-    secondName: second.name,
-    secondSurname: second.surname,
-    firstInitial: first.name.charAt(0),
-    secondInitial: second.name.charAt(0),
-    introNames: `${first.name} & ${second.name}`,
-    monthName: MONTHS[day.getUTCMonth()],
-    dayNumber: String(day.getUTCDate()),
-    weekdayName: WEEKDAYS[day.getUTCDay()],
-    yearNumber: String(day.getUTCFullYear()),
-    dateLong: longDate(day),
-    timeLabel: clockLabel(d.time),
-    mapUrl: d.mapUrl || `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(`${d.venue}, ${d.address}, ${d.city}`)}`,
-    rsvpUrl: digits
-      ? `https://wa.me/${digits}?text=${encodeURIComponent(`Namaste! RSVP for ${first.name} & ${second.name}'s wedding: `)}`
-      : '',
-    rsvpBy: longDate(parseDay(d.rsvpBy)),
-    giftText: d.gift.text,
-    giftButton: d.gift.button,
-    giftUrl: d.gift.url,
-  }
-}
-
-/* ---------------------------------------------------------------- artwork */
-function paintArt() {
-  const [m1, m2] = invitationData.monogram
-  $('#art-defs').innerHTML = `${Art.defs()}<g id="door-art">${Art.doors(m1, m2)}</g>`
-  const inner = (svg) => svg.replace(/^<svg[^>]*>|<\/svg>$/g, '')
-
-  const painters = {
-    facade: () => Art.facade(),
-    monogram: () => Art.monogram(m1, m2),
-    watermark: () => Art.mandala(0, 0, 190, '#e8b4a6', 1),
-    mandala: () => Art.mandala(0, 0, 190),
-    corner: () => Art.corner(),
-    cluster: (el) => {
-      const flip = { x: 'translate(300 0) scale(-1 1)', y: 'translate(0 300) scale(1 -1)' }[el.dataset.flip] || ''
-      return `<g transform="${flip}"><g class="sway">${Art.cluster(Number(el.dataset.seed) || 1, 290)}</g></g>`
-    },
-    ganesha: () => Art.ganesha(),
-    divider: () => inner(Art.divider()),
-    garland: () => Art.swag(0, 300, 12, 70, 3) + Art.swag(300, 600, 12, 56, 4) + Art.swag(600, 900, 12, 70, 5),
-    wreath: () => Art.wreath(128),
-    diyas: () => Art.diyaRow(),
-    arch: () =>
-      `<path d="${Art.arch(10, 290, 190, 20, 392, 7, 9)}" fill="url(#gEmeraldR)" stroke="url(#gGold)" stroke-width="2.5"/>` +
-      `<path d="${Art.arch(24, 276, 192, 38, 378, 7, 8)}" fill="none" stroke="#c9a24b" stroke-width="1"/>` +
-      Art.mandala(150, 112, 44) +
-      `<g transform="translate(16 392) scale(.32 -.32)">${Art.cluster(51, 290)}</g>` +
-      `<g transform="translate(284 392) scale(-.32 -.32)">${Art.cluster(52, 290)}</g>`,
+  function resize() {
+    const dpr = Math.min(window.devicePixelRatio || 1, 2)
+    w = canvas.clientWidth
+    h = canvas.clientHeight
+    canvas.width = w * dpr
+    canvas.height = h * dpr
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0)
+    stars = Array.from({ length: Math.round((w * h) / 2200) }, () => ({
+      x: Math.random() * w,
+      y: Math.random() * h,
+      r: Math.random() < 0.12 ? rand(1.1, 1.9) : rand(0.3, 1),
+      p: rand(0, Math.PI * 2),
+      s: rand(0.6, 1.8),
+      warm: Math.random() < 0.25,
+    }))
   }
 
-  $$('[data-art]').forEach((el) => {
-    const paint = painters[el.dataset.art]
-    if (paint) el.innerHTML = paint(el)
-  })
-
-  if (!invitationData.showGanesha) {
-    $('.ganesha').remove()
-    $('.shloka').remove()
+  function frame(t) {
+    ctx.clearRect(0, 0, w, h)
+    for (const s of stars) {
+      const a = 0.35 + 0.65 * (0.5 + 0.5 * Math.sin(t / 1000 * s.s + s.p))
+      ctx.globalAlpha = a
+      ctx.fillStyle = s.warm ? '#f6cdbf' : '#fff6de'
+      ctx.beginPath()
+      ctx.arc(s.x, (s.y + t * 0.004 * s.r) % h, s.r, 0, Math.PI * 2)
+      ctx.fill()
+    }
+    // an occasional shooting star
+    if (!shoot && t > nextShoot) shoot = { x: rand(w * 0.1, w * 0.7), y: rand(0, h * 0.35), t0: t }
+    if (shoot) {
+      const k = (t - shoot.t0) / 900
+      if (k > 1) {
+        shoot = null
+        nextShoot = t + rand(4000, 9000)
+      } else {
+        const x = shoot.x + k * w * 0.45
+        const y = shoot.y + k * w * 0.2
+        const g = ctx.createLinearGradient(x - 70, y - 31, x, y)
+        g.addColorStop(0, 'rgba(255,244,214,0)')
+        g.addColorStop(1, `rgba(255,244,214,${1 - k})`)
+        ctx.globalAlpha = 1
+        ctx.strokeStyle = g
+        ctx.lineWidth = 1.6
+        ctx.beginPath()
+        ctx.moveTo(x - 70, y - 31)
+        ctx.lineTo(x, y)
+        ctx.stroke()
+      }
+    }
+    ctx.globalAlpha = 1
+    raf = requestAnimationFrame(frame)
   }
+
+  resize()
+  new ResizeObserver(resize).observe(canvas)
+  const run = () => {
+    cancelAnimationFrame(raf)
+    if (document.hidden) return
+    if (reducedMotion()) frame(0) || cancelAnimationFrame(raf)
+    else raf = requestAnimationFrame(frame)
+  }
+  document.addEventListener('visibilitychange', run)
+  run()
 }
 
-/* ---------------------------------------------------------------- content */
-function render(fields) {
-  document.title = `${fields.firstName} & ${fields.secondName} — Wedding Invitation`
+/* ---------------------------------------------------------------- constellation K ♥ D */
+const CONSTELLATION = {
+  K: { pts: [[40, 50], [40, 100], [40, 150], [84, 52], [52, 100], [84, 148]], lines: [[0, 1], [1, 2], [3, 4], [4, 5]] },
+  H: { pts: [[150, 132], [128, 108], [123, 86], [135, 72], [150, 82], [165, 72], [177, 86], [172, 108]], lines: [[0, 1], [1, 2], [2, 3], [3, 4], [4, 5], [5, 6], [6, 7], [7, 0]] },
+  D: { pts: [[216, 50], [216, 150], [242, 55], [261, 74], [267, 100], [261, 126], [242, 145]], lines: [[0, 1], [0, 2], [2, 3], [3, 4], [4, 5], [5, 6], [6, 1]] },
+}
 
-  $$('[data-field]').forEach((el) => {
-    el.textContent = fields[el.dataset.field] ?? ''
-  })
+function buildConstellation() {
+  const lines = []
+  const stars = []
+  let i = 0
+  for (const [key, c] of Object.entries(CONSTELLATION)) {
+    for (const [a, b] of c.lines) {
+      const [x1, y1] = c.pts[a]
+      const [x2, y2] = c.pts[b]
+      lines.push(`<line pathLength="1" x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" style="--i:${lines.length}" class="${key === 'H' ? 'heart' : ''}"/>`)
+    }
+    for (const [x, y] of c.pts) {
+      const dx = rand(-160, 160).toFixed(0)
+      const dy = rand(-120, 120).toFixed(0)
+      const big = key === 'H' && (x === 150) ? 1.5 : 1
+      stars.push(`<g class="cstar" style="--dx:${dx}px;--dy:${dy}px;--i:${i++}" transform="translate(${x} ${y})"><circle r="9" class="cstar__glow"/><path d="${STAR}" transform="scale(${0.42 * big})"/></g>`)
+    }
+  }
+  $('.constellation__lines').innerHTML = lines.join('')
+  $('.constellation__stars').innerHTML = stars.join('')
+  $('#opening-names').innerHTML = `<span>${escapeHtml(F.first.name)}</span> <em>&amp;</em> <span>${escapeHtml(F.second.name)}</span>`
+}
 
-  // A control without a destination is hidden, never left dead
-  $$('[data-href]').forEach((el) => {
-    const href = fields[el.dataset.href]
-    if (href) el.href = href
-    else el.hidden = true
-  })
+/* ---------------------------------------------------------------- the slides */
+function moonPhase(k, size = 26) {
+  // k: 0 new moon → 1 full moon: a lit disc with a shadow disc sliding off it
+  const off = k * size * 2.1 // the shadow slides off as the moon fills
+  return `<svg class="phase" viewBox="${-size} ${-size} ${size * 2} ${size * 2}" aria-hidden="true">
+    <defs><mask id="ph${String(k).replace('.', '')}"><circle r="${size - 2}" fill="#fff"/><circle cx="${-off}" r="${size - 1}" fill="#000"/></mask></defs>
+    <circle r="${size - 2}" fill="none" stroke="rgba(232,180,166,.35)" stroke-width="1"/>
+    <circle r="${size - 2}" fill="url(#rosegold)" mask="url(#ph${String(k).replace('.', '')})"/></svg>`
+}
 
-  $('[data-list="families"]').innerHTML = fields.families
-    .map(
-      (f, i) => `<div class="family reveal" style="--d: ${i + 4}">
-        <p class="caps family__label">${escapeHtml(f.label)}</p>
-        <p class="family__names">${f.names.map(escapeHtml).join('<br />')}</p></div>`,
-    )
+function slidesHtml() {
+  // staggered entrance: every element carrying --i gets the s-item class after render
+  const it = (i) => `style="--i:${i}"`
+  const fam = F.families
+    .map((f, n) => `<div ${it(n + 4)}><p class="caps fam__label">${escapeHtml(f.label)}</p>${f.names.map((x, k) => `<p class="fam__name">${k ? '&amp; ' : ''}${escapeHtml(x)}</p>`).join('')}</div>`)
+    .join('<span class="fam__star" aria-hidden="true">✦</span>')
+  const phases = [0, 0.2, 0.45, 0.7, 1, 0.7, 0.45].map((k, n) => `<span ${it(n)} class="phase-wrap${k === 1 ? ' is-full' : ''}">${moonPhase(k, k === 1 ? 30 : 20)}</span>`).join('')
+  const events = F.events
+    .map((e, n) => `<li ${it(n + 2)}><span class="ev__star" aria-hidden="true"><svg viewBox="-10 -10 20 20"><path d="${STAR}"/></svg></span>
+      <span class="ev__text"><b>${escapeHtml(e.name)}</b><small>${escapeHtml(e.when)}</small>${e.place ? `<small class="ev__place">${escapeHtml(e.place)}</small>` : ''}${e.dress ? `<small class="ev__place">Dress · ${escapeHtml(e.dress)}</small>` : ''}</span></li>`)
     .join('')
-
-  $('[data-list="functions"]').innerHTML = fields.functions
-    .map((fn, i) => {
-      const date = fn.main ? fields.date : fn.date
-      const time = fn.main ? fields.time : fn.time
-      const venue = fn.main ? `${fields.venue}, ${fields.city}` : fn.venue
-      const when = date ? `${fullDate(date)}${time ? ` · ${clockLabel(time)}` : ''}` : 'Details to follow'
-      return `<article class="event reveal reveal--rise" style="--d: ${i % 2 + 2}">
-        <span class="event__icon">${Art.icon(fn.icon)}</span>
-        <h3 class="event__name">${escapeHtml(fn.name)}</h3>
-        <p class="caps event__when">${escapeHtml(when)}</p>
-        ${venue ? `<p class="event__venue">${escapeHtml(venue)}</p>` : ''}
-        ${fn.dress ? `<p class="event__dress">Dress code · ${escapeHtml(fn.dress)}</p>` : ''}
-      </article>`
-    })
-    .join('')
-
-  $('[data-list="story"]').innerHTML = fields.story
-    .map((p, i) => `<p class="reveal" style="--d: ${i + 2}">${escapeHtml(p)}</p>`)
-    .join('')
-
-  $('[data-list="hotels"]').innerHTML = fields.hotels
-    .map(
-      (h, i) => `<article class="hotel reveal" style="--d: ${i + 2}">
-        <h3 class="hotel__name">${escapeHtml(h.name)}</h3>
-        ${h.note ? `<p class="hotel__note">${escapeHtml(h.note)}</p>` : ''}
-        ${h.url ? `<a class="btn" href="${escapeHtml(h.url)}" target="_blank" rel="noopener">Book your stay</a>` : ''}
-      </article>`,
-    )
-    .join('')
-
-  $('[data-list="contacts"]').innerHTML = fields.contacts
+  const ring = Array.from({ length: 36 }, (_, n) => {
+    const a = (n / 36) * Math.PI * 2
+    const r1 = n % 3 ? 92 : 86
+    return `<line x1="${(Math.cos(a) * r1).toFixed(1)}" y1="${(Math.sin(a) * r1).toFixed(1)}" x2="${(Math.cos(a) * 98).toFixed(1)}" y2="${(Math.sin(a) * 98).toFixed(1)}"/>`
+  }).join('')
+  const mapStars = Array.from({ length: 22 }, () => {
+    const a = rand(0, Math.PI * 2)
+    const r = rand(18, 78)
+    return `<circle cx="${(Math.cos(a) * r).toFixed(1)}" cy="${(Math.sin(a) * r).toFixed(1)}" r="${rand(0.6, 1.6).toFixed(1)}"/>`
+  }).join('')
+  const contacts = F.contacts
     .map((c) => {
       const tel = String(c.phone || '').replace(/[^\d+]/g, '')
       return `<p>${escapeHtml(c.name)}${tel ? ` · <a href="tel:${tel}">${escapeHtml(c.phone)}</a>` : ''}</p>`
     })
     .join('')
 
-  // Optional sections disappear when their content is empty
-  $$('[data-optional]').forEach((section) => {
-    const v = fields[section.dataset.optional]
-    if (!v || (Array.isArray(v) && v.length === 0)) section.remove()
-  })
+  return [
+    { id: 'blessing', ms: STORY_MS, html: `
+      <div ${it(0)}>${ganeshaSvg()}</div>
+      <p ${it(1)} class="shloka" lang="sa">॥ ${escapeHtml(F.blessing)} ॥</p>
+      <p ${it(2)} class="caps s-eyebrow">With the blessings of our families</p>
+      <div class="fams">${fam}</div>
+      <p ${it(7)} class="s-lede">${escapeHtml(F.familiesMessage)}</p>` },
+    { id: 'names', ms: STORY_MS, html: `
+      <svg class="bigmoon s-item" style="--i:0" viewBox="-80 -80 160 160" aria-hidden="true">
+        <circle r="78" fill="url(#moonglow)"/><g mask="url(#crescent)"><circle r="46" fill="url(#rosegold)"/></g></svg>
+      <p ${it(1)} class="caps s-eyebrow">${escapeHtml(F.openingMessage)}</p>
+      <h2 class="names"><span ${it(2)} class="names__first foil">${escapeHtml(F.first.name)}</span>
+        <span ${it(3)} class="caps names__last">${escapeHtml(F.first.surname)}</span>
+        <span ${it(4)} class="names__amp foil">&amp;</span>
+        <span ${it(5)} class="names__first foil">${escapeHtml(F.second.name)}</span>
+        <span ${it(6)} class="caps names__last">${escapeHtml(F.second.surname)}</span></h2>
+      <p ${it(7)} class="s-lede">${escapeHtml(F.inviteLine)}</p>` },
+    { id: 'date', ms: STORY_MS, html: `
+      <p ${it(0)} class="caps s-eyebrow">Save the date</p>
+      <div class="phases">${phases}</div>
+      <p ${it(3)} class="caps date__wd">${F.weekdayName}</p>
+      <p ${it(4)} class="date__day foil">${F.dayNumber}</p>
+      <p ${it(5)} class="caps date__my">${F.monthName} ${F.year}</p>
+      <p ${it(6)} class="date__time">${F.timeLabel}</p>
+      <dl ${it(7)} class="count">
+        <div><dd data-c="days">0</dd><dt>days</dt></div><div><dd data-c="hours">0</dd><dt>hours</dt></div>
+        <div><dd data-c="minutes">0</dd><dt>min</dt></div><div><dd data-c="seconds">0</dd><dt>sec</dt></div></dl>` },
+    { id: 'events', ms: STORY_MS + 4000, html: `
+      <p ${it(0)} class="caps s-eyebrow">The celebrations</p>
+      <h2 ${it(1)} class="s-title">Our constellation of days</h2>
+      <ol class="events">${events}</ol>` },
+    { id: 'venue', ms: STORY_MS, html: `
+      <p ${it(0)} class="caps s-eyebrow">Where the stars meet</p>
+      <svg class="starmap s-item" style="--i:1" viewBox="-100 -100 200 200" aria-hidden="true">
+        <circle r="98" class="sm-ring"/><circle r="66" class="sm-ring sm-ring--thin"/><circle r="34" class="sm-ring sm-ring--thin"/>
+        <g class="sm-ticks">${ring}</g><line x1="-98" y1="0" x2="98" y2="0" class="sm-axis"/><line x1="0" y1="-98" x2="0" y2="98" class="sm-axis"/>
+        <g class="sm-stars">${mapStars}</g>
+        <text y="-104" class="sm-n">N</text>
+        <circle r="16" class="sm-pulse"/><path d="${STAR}" transform="scale(1.3)" class="sm-pin"/></svg>
+      <h2 ${it(2)} class="s-title">${escapeHtml(F.venue)}</h2>
+      <p ${it(3)} class="caps s-city">${escapeHtml(F.city)}</p>
+      <p ${it(4)} class="s-lede">${escapeHtml(F.address)}</p>
+      <a ${it(5)} class="btn s-item" href="${F.mapHref}" target="_blank" rel="noopener">Open in Maps</a>` },
+    { id: 'rsvp', ms: 0, html: `
+      <p ${it(0)} class="caps s-eyebrow">Light a lantern for us</p>
+      <button class="lantern s-item" style="--i:1" id="lantern" type="button" aria-label="Release a lantern">
+        <svg viewBox="-40 -60 80 120" aria-hidden="true"><circle r="38" cy="2" fill="url(#lanternglow)"/>
+          <rect x="-17" y="-24" width="34" height="48" rx="15" fill="url(#lanternbody)"/>
+          <rect x="-11" y="-30" width="22" height="7" rx="2" fill="url(#rosegold)"/><rect x="-11" y="23" width="22" height="6" rx="2" fill="url(#rosegold)"/>
+          <path d="M0 -10 C-5 -2 -5 6 0 10 C5 6 5 -2 0 -10Z" fill="#fff7d8" opacity=".9"/></svg>
+      </button>
+      <p ${it(2)} class="lantern__hint">Tap the lantern to send your blessing</p>
+      <h2 ${it(3)} class="s-title">Kindly reply</h2>
+      <p ${it(4)} class="caps s-city">by ${escapeHtml(F.rsvpByLong)}</p>
+      ${F.rsvpHref ? `<a ${it(5)} class="btn s-item" href="${F.rsvpHref}" target="_blank" rel="noopener">RSVP on WhatsApp</a>` : ''}
+      <div ${it(6)} class="contacts">${contacts}</div>
+      <p ${it(7)} class="closing foil">${escapeHtml(F.closingMessage)}</p>` },
+  ]
 }
 
-/* ---------------------------------------------------------------- ambient particles */
-function seedParticles() {
-  for (const dust of $$('.dust, .intro__dust')) {
-    for (let i = 0; i < 18; i++) {
-      const m = document.createElement('i')
-      m.className = 'mote'
-      m.style.cssText = `--x:${rand(4, 96).toFixed(1)}%;--s:${rand(0.6, 1.6).toFixed(2)}cqw;--t:${rand(7, 13).toFixed(1)}s;--delay:${(-rand(0, 12)).toFixed(1)}s;--sway:${rand(-8, 8).toFixed(1)}cqw`
-      dust.append(m)
-    }
-  }
-
-  const sparkles = $('.sparkles')
-  for (let i = 0; i < 12; i++) {
-    const s = document.createElement('i')
-    s.className = 'sparkle'
-    s.innerHTML = '<svg viewBox="-10 -10 20 20"><use href="#star"/></svg>'
-    s.style.cssText = `--x:${rand(12, 84).toFixed(1)}%;--y:${rand(26, 60).toFixed(1)}%;--s:${rand(2, 4).toFixed(1)}cqw;--t:${rand(2.4, 4).toFixed(1)}s;--delay:${rand(0, 3).toFixed(1)}s`
-    sparkles.append(s)
-  }
-
-  const card = $('#card')
-  for (let i = 0; i < 9; i++) {
-    const p = document.createElement('i')
-    p.className = 'drift-petal'
-    p.setAttribute('aria-hidden', 'true')
-    p.style.cssText = `--x:${(i * 11 + rand(0, 6)).toFixed(1)}%;--s:${rand(2.4, 4).toFixed(2)}cqw;--t:${rand(9, 14).toFixed(1)}s;--delay:${(i * 1.3).toFixed(1)}s;--sway:${rand(-10, 10).toFixed(1)}cqw`
-    card.append(p)
-  }
-}
-
-// Petals and marigold flowers thrown out as the doors open
-function burstPetals() {
-  const burst = $('.burst')
-  const colours = ['radial-gradient(circle at 35% 35%, #ffffff, #e6ecfb 60%, #b9c6ef)', 'radial-gradient(circle at 35% 35%, #fff4f0, #f2c4b3 70%)', 'radial-gradient(circle at 40% 40%, #fff8e0, #ffd98a)', 'radial-gradient(circle at 40% 40%, #ffffff, #fde6dc)', 'radial-gradient(circle at 40% 40%, #fff, #e8b4a6)']
-  const frag = document.createDocumentFragment()
-  for (let i = 0; i < 40; i++) {
-    const a = rand(0, Math.PI * 2)
-    const dist = rand(18, 62)
-    const p = document.createElement('i')
-    p.className = 'burst__petal'
-    p.style.cssText =
-      `--x:${(Math.cos(a) * dist).toFixed(1)}cqw;--y:${(Math.sin(a) * dist * 1.2 - 12).toFixed(1)}cqw;` +
-      `--r:${rand(-260, 260).toFixed(0)}deg;--s:${rand(2.2, 4.6).toFixed(2)}cqw;--t:${rand(2.8, 4.2).toFixed(2)}s;` +
-      `--delay:${rand(0, 0.35).toFixed(2)}s;--c:${colours[i % colours.length]}`
-    frag.append(p)
-  }
-  burst.append(frag)
-}
-
-/* ---------------------------------------------------------------- countdown */
-function createCountdown(fields) {
-  const target = Date.parse(`${fields.date}T${fields.time}:00${fields.utcOffset}`)
-  const out = Object.fromEntries($$('[data-count]').map((el) => [el.dataset.count, el]))
-  let timer = 0
+/* ---------------------------------------------------------------- the story player */
+function createStories(slides, onEnd) {
+  const host = $('#slides')
+  const bars = $('#bars')
+  host.innerHTML = slides.map((s) => `<article class="slide slide--${s.id}" data-id="${s.id}" aria-hidden="true"><div class="slide__inner">${s.html}</div></article>`).join('')
+  bars.innerHTML = slides.map(() => '<span><i></i></span>').join('')
+  $$('[style*="--i"]', host).forEach((e) => e.classList.add('s-item'))
+  const els = $$('.slide', host)
+  const fills = $$('i', bars)
+  let index = -1
+  let t0 = 0
+  let elapsed = 0
+  let paused = false
   let raf = 0
 
-  function parts(now) {
-    const ms = Math.max(0, target - now)
-    return {
-      days: Math.floor(ms / 86400000),
-      hours: Math.floor(ms / 3600000) % 24,
-      minutes: Math.floor(ms / 60000) % 60,
-      seconds: Math.floor(ms / 1000) % 60,
-    }
+  function paint() {
+    fills.forEach((f, n) => {
+      const k = n < index ? 1 : n > index ? 0 : slides[index].ms ? Math.min(1, elapsed / slides[index].ms) : 1
+      f.style.transform = `scaleX(${k})`
+    })
   }
 
-  function paint(p) {
-    for (const k in p) out[k].textContent = String(p[k]).padStart(2, '0')
+  function tick(t) {
+    if (!paused) elapsed = t - t0
+    paint()
+    const ms = slides[index].ms
+    if (ms && elapsed >= ms) return go(index + 1, 1)
+    raf = requestAnimationFrame(tick)
+  }
+
+  function go(n, dir = 1) {
+    if (n < 0) n = 0
+    if (n >= slides.length) return onEnd()
+    cancelAnimationFrame(raf)
+    const prev = els[index]
+    if (prev && prev !== els[n]) {
+      prev.classList.remove('is-active', 'in-fwd', 'in-back')
+      prev.classList.add(dir > 0 ? 'out-fwd' : 'out-back')
+      prev.setAttribute('aria-hidden', 'true')
+      prev.addEventListener('animationend', () => prev.classList.remove('out-fwd', 'out-back'), { once: true })
+    }
+    index = n
+    const el = els[n]
+    el.classList.remove('out-fwd', 'out-back')
+    void el.offsetWidth
+    el.classList.add('is-active', prev && prev !== el ? (dir > 0 ? 'in-fwd' : 'in-back') : 'in-fwd')
+    el.setAttribute('aria-hidden', 'false')
+    elapsed = 0
+    t0 = performance.now()
+    paused = false
+    raf = requestAnimationFrame(tick)
   }
 
   return {
-    // Count up from zero once, then tick live every second
-    start(reduced) {
-      this.stop()
-      const final = parts(Date.now())
-      if (reduced) {
-        paint(final)
-      } else {
-        const t0 = performance.now()
-        const step = (t) => {
-          const k = Math.min(1, (t - t0) / 1800)
-          const e = 1 - Math.pow(1 - k, 3)
-          paint(Object.fromEntries(Object.entries(final).map(([key, v]) => [key, Math.round(v * e)])))
-          if (k < 1) raf = requestAnimationFrame(step)
-        }
-        raf = requestAnimationFrame(step)
+    start: () => go(0, 1),
+    next: () => go(index + 1, 1),
+    prev: () => go(index - 1, -1),
+    pause(on) {
+      if (on && !paused) paused = true
+      else if (!on && paused) {
+        paused = false
+        t0 = performance.now() - elapsed
       }
-      timer = setTimeout(function tick() {
-        paint(parts(Date.now()))
-        timer = setTimeout(tick, 1000 - (Date.now() % 1000))
-      }, reduced ? 1000 : 1900)
     },
     stop() {
-      clearTimeout(timer)
       cancelAnimationFrame(raf)
-      paint({ days: 0, hours: 0, minutes: 0, seconds: 0 })
+      els.forEach((e) => e.classList.remove('is-active', 'in-fwd', 'in-back', 'out-fwd', 'out-back'))
+      index = -1
+    },
+    get index() {
+      return index
     },
   }
 }
 
-/* ---------------------------------------------------------------- music */
-function createMusic(cfg, button) {
-  const state = { ok: false, on: false, wanted: false, revealed: false, fadeRaf: 0 }
-  if (!cfg || !cfg.src) return { start() {}, restart() {}, reveal() {} }
-
-  const audio = new Audio()
-  audio.loop = true
-  audio.preload = 'auto'
-  audio.volume = 0
-  audio.addEventListener('canplay', () => {
-    state.ok = true
-    if (state.revealed) button.hidden = false
-  }, { once: true })
-  audio.addEventListener('error', () => {
-    state.ok = false
-    button.hidden = true
-  })
-  audio.src = cfg.src
-
-  function fadeTo(target, ms, then) {
-    cancelAnimationFrame(state.fadeRaf)
-    const from = audio.volume
-    const t0 = performance.now()
-    const step = (t) => {
-      const k = Math.min(1, (t - t0) / ms)
-      audio.volume = Math.max(0, Math.min(1, from + (target - from) * k))
-      if (k < 1) state.fadeRaf = requestAnimationFrame(step)
-      else if (then) then()
-    }
-    state.fadeRaf = requestAnimationFrame(step)
-  }
-
-  function setOn(on) {
-    state.on = on
-    button.setAttribute('aria-pressed', String(on))
-    if (on) {
-      audio.play().then(() => fadeTo(cfg.volume ?? 0.6, 1600)).catch(() => {
-        state.on = false
-        button.setAttribute('aria-pressed', 'false')
-      })
-    } else {
-      fadeTo(0, 700, () => audio.pause())
-    }
-  }
-
-  button.addEventListener('click', () => {
-    state.wanted = !state.on
-    setOn(!state.on)
-  })
-
-  document.addEventListener('visibilitychange', () => {
-    if (!state.on) return
-    if (document.hidden) audio.pause()
-    else audio.play().catch(() => {})
-  })
-
-  return {
-    // Must run inside the tap handler so browsers allow playback
-    start() {
-      state.wanted = true
-      setOn(true)
-    },
-    restart() {
-      if (!state.wanted) return
-      audio.currentTime = 0
-      audio.volume = 0
-      setOn(true)
-    },
-    reveal() {
-      state.revealed = true
-      if (state.ok) button.hidden = false
-    },
-  }
-}
-
-/* ---------------------------------------------------------------- auto tour
-   Glides through every section, holding on each. Any wheel, touch or key
-   from the guest hands control straight back. */
-function createTour(scroller) {
-  let raf = 0
-  let timer = 0
-  let active = false
-
-  const ease = (t) => (t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2)
-
-  function stops() {
-    const view = scroller.clientHeight
-    const max = scroller.scrollHeight - view
-    const list = []
-    for (const s of $$('.scroller > section:not(.hero)')) {
-      let y = s.offsetTop
-      const end = s.offsetTop + s.offsetHeight - view
-      list.push({ y: Math.min(y, max), hold: 2600 })
-      while (y + view * 0.7 < end) {
-        y += view * 0.7
-        list.push({ y: Math.min(y, max), hold: 2200 })
-      }
-    }
-    list.push({ y: max, hold: 0 })
-    return list.filter((s, i, a) => i === 0 || Math.abs(s.y - a[i - 1].y) > 8)
-  }
-
-  function glide(to, done) {
-    const from = scroller.scrollTop
-    const dur = Math.max(900, Math.min(2300, (Math.abs(to - from) / scroller.clientHeight) * 1500))
-    const t0 = performance.now()
-    const step = (t) => {
-      if (!active) return
-      const k = Math.min(1, (t - t0) / dur)
-      scroller.scrollTop = from + (to - from) * ease(k)
-      if (k < 1) raf = requestAnimationFrame(step)
-      else done()
-    }
-    raf = requestAnimationFrame(step)
-  }
-
-  function stop() {
-    active = false
-    cancelAnimationFrame(raf)
-    clearTimeout(timer)
-  }
-
-  for (const type of ['wheel', 'touchstart', 'pointerdown', 'keydown']) {
-    scroller.addEventListener(type, stop, { passive: true })
-  }
-
-  return {
-    play() {
-      stop()
-      active = true
-      const list = stops()
-      let i = 0
-      const next = () => {
-        if (!active || i >= list.length) return stop()
-        const { y, hold } = list[i++]
-        glide(y, () => {
-          timer = setTimeout(next, hold)
-        })
-      }
-      next()
-    },
-    stop,
-  }
-}
-
-/* ---------------------------------------------------------------- the player */
+/* ---------------------------------------------------------------- page */
 function init() {
   const stage = $('#stage')
-  const scroller = $('#scroller')
-  const palace = $('#palace')
-  const openBtn = $('#open-btn')
-  const replayBtn = $('#replay-btn')
-  const soundBtn = $('#sound-btn')
-  const reducedQuery = window.matchMedia('(prefers-reduced-motion: reduce)')
+  const opening = $('#opening')
+  const stories = $('#stories')
+  const music = createMusic(F.music, $('#sound-btn'))
+  let countTimer = 0
 
-  let fields
-  try {
-    paintArt()
-    fields = buildFields(invitationData)
-    render(fields)
-    seedParticles()
-  } catch (err) {
-    console.error('Invitation: check invitationData in script.js —', err)
-    return
+  // shared gradients for every inline svg
+  document.body.insertAdjacentHTML('beforeend', `<svg class="sr-only" aria-hidden="true"><defs>
+    <linearGradient id="rosegold" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#a8695c"/><stop offset=".35" stop-color="#e8b4a6"/><stop offset=".55" stop-color="#fde6dc"/><stop offset=".8" stop-color="#d99a87"/><stop offset="1" stop-color="#b9786a"/></linearGradient>
+    <radialGradient id="moonglow"><stop offset=".55" stop-color="#fde6dc" stop-opacity=".35"/><stop offset="1" stop-color="#fde6dc" stop-opacity="0"/></radialGradient>
+    <radialGradient id="lanternglow"><stop offset="0" stop-color="#ffe2a0" stop-opacity=".8"/><stop offset="1" stop-color="#ffb35a" stop-opacity="0"/></radialGradient>
+    <linearGradient id="lanternbody" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffe7a8"/><stop offset=".55" stop-color="#f6a55a"/><stop offset="1" stop-color="#e0703c"/></linearGradient>
+    <mask id="crescent"><circle r="46" fill="#fff"/><circle cx="20" cy="-12" r="42" fill="#000"/></mask></defs></svg>`)
+
+  createSky($('#sky'))
+  buildConstellation()
+  $('#who').textContent = `${F.first.name} & ${F.second.name}`
+  $('.storyhead__avatar').textContent = `${F.monogram[0]}${F.monogram[1]}`
+
+  const player = createStories(slidesHtml(), () => {})
+  requestAnimationFrame(() => stage.classList.add('is-opening'))
+
+  function paintCount() {
+    const p = countdownParts(F.target)
+    $$('[data-c]').forEach((el) => (el.textContent = String(p[el.dataset.c]).padStart(2, '0')))
   }
 
-  const sections = $$('.scroller > section:not(.hero)')
-  const countdown = createCountdown(fields)
-  const music = createMusic(invitationData.music, soundBtn)
-  const tour = createTour(scroller)
-
-  // A run token makes timers left over from an earlier play harmless
-  let run = 0
-  let timers = []
-  let opened = false
-  let guestScrolled = false
-
-  const STATES = ['is-intro', 'is-docked', 'is-intro-done', 'is-tap', 'is-light', 'is-doors', 'is-through', 'is-card', 'is-text', 'is-ready']
-  const intro = $('#intro')
-  let introDone = false
-
-  for (const type of ['wheel', 'touchstart', 'keydown']) {
-    scroller.addEventListener(type, () => (guestScrolled = true), { passive: true })
-  }
-
-  function schedule(ms, fn) {
-    const token = run
-    timers.push(setTimeout(() => token === run && fn(), ms))
-  }
-
-  const io = new IntersectionObserver(
-    (entries) => {
-      for (const e of entries) {
-        if (!e.isIntersecting || e.target.classList.contains('is-in')) continue
-        e.target.classList.add('is-in')
-        if (e.target.id === 'countdown') countdown.start(reducedQuery.matches)
-      }
-    },
-    { root: scroller, threshold: 0.15 },
-  )
-  sections.forEach((s) => io.observe(s))
-
-  function play() {
-    const t = reducedQuery.matches ? TIMELINE_REDUCED : TIMELINE
-    opened = true
-    guestScrolled = false
-    schedule(t.tap, () => stage.classList.add('is-tap'))
-    schedule(t.light, () => stage.classList.add('is-light'))
-    schedule(t.doors, () => {
-      stage.classList.add('is-doors')
-      if (!reducedQuery.matches) burstPetals()
-    })
-    schedule(t.through, () => stage.classList.add('is-through'))
-    schedule(t.card, () => stage.classList.add('is-card'))
-    schedule(t.text, () => stage.classList.add('is-text'))
-    schedule(t.ready, () => {
-      stage.classList.add('is-ready')
-      stage.classList.remove('is-sealed')
-      palace.setAttribute('aria-hidden', 'true')
-      replayBtn.hidden = false
-      music.reveal()
-      scroller.focus({ preventScroll: true })
-    })
-    if (invitationData.autoTour && t.tour !== null) {
-      schedule(t.tour, () => !guestScrolled && tour.play())
-    }
-  }
-
-  function reset() {
-    run++
-    timers.forEach(clearTimeout)
-    timers = []
-    tour.stop()
-    countdown.stop()
-    $('.burst').replaceChildren()
-    stage.classList.add('is-resetting')
-    stage.classList.remove(...STATES)
-    stage.classList.add('is-sealed')
-    sections.forEach((s) => {
-      s.classList.remove('is-in')
-      io.unobserve(s)
-      io.observe(s)
-    })
-    palace.removeAttribute('aria-hidden')
-    scroller.scrollTop = 0
-    void stage.offsetWidth // commit the reset frame before transitions return
-    requestAnimationFrame(() => requestAnimationFrame(() => stage.classList.remove('is-resetting')))
-  }
-
-  // The crest draws itself, then shrinks into the door seal. `then` runs once it has docked.
-  function playIntro(then) {
-    const t = reducedQuery.matches ? INTRO_REDUCED : INTRO
-    introDone = false
-    schedule(t.draw, () => stage.classList.add('is-intro'))
-    schedule(t.docked, () => stage.classList.add('is-docked'))
-    schedule(t.done, () => {
-      stage.classList.add('is-intro-done')
-      introDone = true
-      if (then) then()
-    })
-  }
-
-  // A tap during the crest skips straight to the doors, then opens them
-  function skipIntro() {
-    run++
-    timers.forEach(clearTimeout)
-    timers = []
-    stage.classList.add('is-intro', 'is-docked')
-    schedule(500, () => {
-      stage.classList.add('is-intro-done')
-      introDone = true
-      play()
-    })
-  }
-
-  function open() {
-    if (opened) return
+  function begin() {
+    if (!stories.hidden) return
     music.start()
-    if (introDone) play()
-    else {
-      opened = true
-      skipIntro()
-    }
+    music.reveal()
+    stage.classList.add('is-leaving')
+    setTimeout(() => {
+      opening.hidden = true
+      stories.hidden = false
+      stage.classList.add('is-stories')
+      player.start()
+      paintCount()
+      countTimer = setInterval(paintCount, 1000)
+    }, reducedMotion() ? 0 : 900)
   }
+  $('#begin').addEventListener('click', begin)
 
-  intro.addEventListener('click', open)
-  palace.addEventListener('click', open)
-  openBtn.addEventListener('click', (e) => {
+  // tap left/right to move, hold anywhere to pause, swipe sideways too
+  let downAt = 0
+  let downX = 0
+  let held = false
+  let holdTimer = 0
+  const zones = [$('#prev'), $('#next')]
+  zones.forEach((z) => {
+    z.addEventListener('pointerdown', (e) => {
+      downAt = performance.now()
+      downX = e.clientX
+      held = false
+      holdTimer = setTimeout(() => {
+        held = true
+        player.pause(true)
+        stage.classList.add('is-held')
+      }, 220)
+    })
+    z.addEventListener('pointerup', (e) => {
+      clearTimeout(holdTimer)
+      stage.classList.remove('is-held')
+      if (held) return player.pause(false)
+      const dx = e.clientX - downX
+      if (Math.abs(dx) > 40) return dx < 0 ? player.next() : player.prev()
+      if (performance.now() - downAt < 400) (z.id === 'next' ? player.next : player.prev)()
+    })
+    z.addEventListener('pointercancel', () => {
+      clearTimeout(holdTimer)
+      stage.classList.remove('is-held')
+      player.pause(false)
+    })
+  })
+  document.addEventListener('keydown', (e) => {
+    if (stories.hidden) return
+    if (e.key === 'ArrowRight') player.next()
+    if (e.key === 'ArrowLeft') player.prev()
+  })
+  setTimeout(() => $('#hint').classList.add('is-gone'), 9000)
+
+  // the lantern floats away when tapped
+  $('#slides').addEventListener('click', (e) => {
+    const lantern = e.target.closest('#lantern')
+    if (!lantern) return
+    lantern.classList.remove('is-flying')
+    void lantern.offsetWidth
+    lantern.classList.add('is-flying')
+  })
+
+  $('#replay-btn').addEventListener('click', (e) => {
     e.stopPropagation()
-    open()
-  })
-
-  replayBtn.addEventListener('click', () => {
-    reset()
-    opened = true
+    clearInterval(countTimer)
+    player.stop()
+    stories.hidden = true
+    opening.hidden = false
+    stage.classList.remove('is-stories', 'is-leaving', 'is-opening')
+    $('#lantern').classList.remove('is-flying')
+    buildConstellation()
+    void stage.offsetWidth
+    requestAnimationFrame(() => stage.classList.add('is-opening'))
     music.restart()
-    // Replay the crest, then open the doors on their own
-    playIntro(() => schedule(700, play))
   })
-
-  playIntro()
 }
 
 if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init)

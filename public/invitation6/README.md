@@ -1,33 +1,44 @@
-# Midnight Celestial — `/invitation6/`
+# Written in the Stars — `/invitation6/`
 
-One of the seven Kirti & Dharmil invitations. The gallery at `/invite/` links all of them.
-
-**Look:** navy night sky with twinkling stars, two constellations, a rose-gold crescent moon, fairy-light swags, swaying sky lanterns and a shooting star. **Doors:** deep indigo doors with rose-gold inlay and moonflower medallions.
-
-It uses the same sequence as `/invitation3/`:
-
-1. The DK crest draws itself on load, then shrinks onto the door seal.
-2. "Tap the seal to open": light down the seam, the doors swing open in 3D with a petal burst, then a flash
-   through the arch onto the card.
-3. Ganesha and the shloka, the names written in metallic foil, the date and venue.
-4. The auto tour through Families, Countdown, Celebrations, Venue, Story, Stay, Gifts and RSVP.
-
-The page has a Replay button and a sound button, and supports reduced motion.
+**Format:** Tap-through stories. One of the seven Kirti & Dharmil invitations; the gallery at `/invite/` links them all.
 
 ```
 invitation6/
-├── index.html   markup (intro, palace doors, card, eight sections)
-├── styles.css   shared layout + this theme's palette (:root) and theme block
-├── art.js       this theme's vector art: palette, flowers, garlands, side figures, palace front, doors, crest
-├── script.js    invitationData (all content), timelines, tour, countdown, music, replay
-└── assets/      audio/wedding-loop.mp3 (original loop); fonts/ and images/ are empty
+├── index.html   opening (constellation) + story player shell
+├── styles.css   night sky, story chrome, cube-style turns, slide layouts
+├── script.js    canvas starfield, K ♥ D constellation, slides, story player
+└── core.js      invitationData + shared helpers (dates, music, countdown, Ganesha)
 ```
 
-**Content** is in `invitationData` at the top of `script.js`: the same fields as `/invitation3/`. Lines marked
-`// PLACEHOLDER` still need the real date, venue, functions, RSVP number and contacts.
+**How it plays**
 
-**Regenerating:** this route was generated from `/invitation3/` by `scripts/invitation-themes.py`
-(`python3 scripts/invitation-themes.py public`). Regenerating rebuilds the code from `/invitation3/` and keeps
-this README, so make content edits in `invitation3/script.js` first, or re-apply them afterwards.
+1. A canvas night sky twinkles, with an occasional shooting star. About 20 stars fly in from scattered positions
+   and join into **K ♥ D**; the lines draw between them, then the names and a "Tap to begin our story" button
+   appear.
+2. The tap starts the music and the stories. Progress bars run along the top, and each slide turns like a cube
+   face.
+   - **Tap** the right side for the next slide, the left side to go back.
+   - **Hold** to pause; **swipe** sideways; or use the **arrow keys**.
+3. The slides:
+   1. Ganesha drawn in rose gold, the shloka and both families.
+   2. A crescent moon rising over the names.
+   3. Moon phases leading to a full moon on the wedding date, with a live countdown.
+   4. The functions as a constellation timeline.
+   5. A star-map venue with a pulsing pin and a Maps link.
+   6. A sky lantern you tap to release, then RSVP, contacts and the closing line.
 
-All artwork is vector: gradients and shapes, with no photos or blur, so it stays sharp on any screen.
+   The last slide stays on screen. Replay (top right) goes back to the constellation.
+
+## Edit the content
+
+All the wording lives in `invitationData` at the top of **`core.js`**: names, families, date, time, venue,
+functions, story, RSVP and contacts. Lines marked `// PLACEHOLDER` still need real details. `core.js` is the same
+in `invitation4/` to `invitation7/`, so to change all four designs at once, edit one copy and copy it over the
+other three.
+
+Music: `assets/audio/wedding-loop.mp3`, an original loop rendered by `scripts/invitation-music.py`. Playback
+starts with the first tap, and the sound control only appears once the track has loaded.
+
+All artwork is vector (SVG, CSS and canvas), so it stays sharp on any screen. The page works from `npm run dev`,
+from the production build, and opened straight from disk. With `prefers-reduced-motion`, everything still appears
+in order, without the movement.

@@ -1,673 +1,333 @@
 /* =============================================================================
-   Royal wedding invitation — content, timeline and playback
-   Edit `invitationData` below; every visible value is read from it.
-   Lines marked PLACEHOLDER still need the real details.
+   Our little scrapbook — a kraft envelope that bursts into a table of cards.
+   Content lives in core.js (invitationData).
    ========================================================================== */
 
 'use strict'
 
-/* ---------------------------------------------------------------- content
-   Dates are YYYY-MM-DD and times 24-hour HH:MM, in the venue's local time. */
-const invitationData = {
-  bride: { name: 'Kirti', surname: 'Koyani' },
-  groom: { name: 'Dharmil', surname: 'Jarsaniya' },
-  brideFirst: true, // Kirti & Dharmil
-  monogram: ['D', 'K'], // letters in the logo crest: intro and door seal
-  introLine: 'Wedding Invitation',
+const F = buildFields()
 
-  showGanesha: true,
-  blessing: 'श्री गणेशाय नमः',
-  openingMessage: 'Together with their families',
-  inviteLine: 'request the pleasure of your company to celebrate their wedding',
+/* ---------------------------------------------------------------- vector art */
+const ART = {
+  defs: `
+    <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#f7c59a"/><stop offset=".55" stop-color="#f2b8a2"/><stop offset="1" stop-color="#fbe2cf"/></linearGradient>
+    <radialGradient id="sun" cx="40%" cy="35%" r="70%"><stop offset="0" stop-color="#fff1d6"/><stop offset=".5" stop-color="#f6a46f"/><stop offset="1" stop-color="#d9805f"/></radialGradient>
+    <linearGradient id="hill1" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#d9805f"/><stop offset="1" stop-color="#b5532f"/></linearGradient>
+    <linearGradient id="hill2" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#e9b48f"/><stop offset="1" stop-color="#d9805f"/></linearGradient>`,
 
-  date: '2027-02-12', // PLACEHOLDER — wedding date
-  time: '19:30', // PLACEHOLDER — muhurat / start time
-  utcOffset: '+05:30', // India; used by the countdown
-
-  venue: 'Your Venue Name', // PLACEHOLDER
-  city: 'Your City', // PLACEHOLDER
-  address: 'Full venue address', // PLACEHOLDER
-  mapUrl: '', // leave empty to search the venue on Google Maps
-
-  familiesEyebrow: 'With the blessings of our elders',
-  familiesMessage: 'We joyfully invite you and your family to grace the wedding of our children and bless the couple as they begin their new life together.',
-  families: [
-    { label: 'Bride’s Family', names: ['Kishorbhai Vajubhai Koyani', '& Dimpleben Kishorbhai Koyani'] },
-    { label: 'Groom’s Family', names: ['Manojbhai Premjibhai Jarsaniya', '& Naynaben Manojbhai Jarsaniya'] },
-  ],
-
-  // Leave date / time / venue empty to show "Details to follow". Delete an entry to drop that function.
-  functions: [
-    { name: 'Ganesh Sthapana', icon: 'kalash', date: '', time: '', venue: '', dress: '' }, // PLACEHOLDER
-    { name: 'Mehendi', icon: 'mehendi', date: '', time: '', venue: '', dress: '' }, // PLACEHOLDER
-    { name: 'Haldi', icon: 'haldi', date: '', time: '', venue: '', dress: '' }, // PLACEHOLDER
-    { name: 'Sangeet Sandhya', icon: 'sangeet', date: '', time: '', venue: '', dress: '' }, // PLACEHOLDER
-    { name: 'Wedding Ceremony', icon: 'mandap', main: true, dress: '' }, // uses the main date, time and venue
-    { name: 'Reception', icon: 'reception', date: '', time: '', venue: '', dress: '' }, // PLACEHOLDER
-  ],
-
-  // Empty list = section hidden
-  story: [
-    'PLACEHOLDER — a line about how you met.', // PLACEHOLDER
-    'PLACEHOLDER — a line about the moment you knew.', // PLACEHOLDER
-    'And now, with the blessings of our families, forever begins.',
-  ],
-
-  hotels: [
-    { name: 'Hotel name', note: 'A short note — distance, special rate', url: '' }, // PLACEHOLDER
-  ],
-
-  gift: {
-    text: 'Your presence and blessings are the most precious gift to us.',
-    button: 'View gift details',
-    url: '', // the button is hidden until this is set
+  plume(x, y, s, r, seed) {
+    let a = seed
+    const rnd = () => ((a = (a * 9301 + 49297) % 233280) / 233280)
+    const parts = [`<path d="M0 0 C1.5 -20 0 -30 0 -42" stroke="#c9a77a" stroke-width="1.3" fill="none"/>`]
+    for (let i = 0; i < 34; i++) {
+      const t = i / 33
+      const yy = -40 - t * 66
+      const spread = Math.sin(Math.PI * Math.min(1, t * 1.15)) * 9 + 2
+      const xx = (rnd() * 2 - 1) * spread
+      parts.push(`<ellipse cx="${xx.toFixed(1)}" cy="${yy.toFixed(1)}" rx="1.8" ry="6" fill="${['#f6ead8', '#ead7b8', '#fbf3e6', '#e3c9a2'][i % 4]}" transform="rotate(${xx > 0 ? 18 : -18} ${xx.toFixed(1)} ${yy.toFixed(1)})"/>`)
+    }
+    return `<g transform="translate(${x} ${y}) rotate(${r}) scale(${s})">${parts.join('')}</g>`
   },
 
-  rsvpBy: '2027-01-20', // PLACEHOLDER
-  rsvpWhatsApp: '', // PLACEHOLDER — digits with country code, e.g. '919800000000'
-  contacts: [
-    { name: 'Contact name', phone: '' }, // PLACEHOLDER
-  ],
-  closingMessage: 'We look forward to celebrating with you',
-
-  music: {
-    src: 'assets/audio/wedding-loop.mp3', // original loop (scripts/invitation-music.py); swap in your own file here
-    volume: 0.6,
+  pampas() {
+    return [-24, -10, 6, 20].map((r, i) => ART.plume(60, 160, 1.3 - i * 0.05, r, i * 7 + 3)).join('')
   },
 
-  autoTour: true, // after the reveal, glide through every section
+  sunset() {
+    const rays = Array.from({ length: 18 }, (_, i) => {
+      const a = (i / 18) * Math.PI - Math.PI
+      return `<path d="M${150 + Math.cos(a) * 62} ${170 + Math.sin(a) * 62} L${150 + Math.cos(a) * 110} ${170 + Math.sin(a) * 110}" stroke="#fbe2cf" stroke-width="5" stroke-linecap="round" opacity=".6"/>`
+    }).join('')
+    return `<rect width="300" height="300" fill="url(#sky)"/>${rays}
+      <circle cx="150" cy="170" r="54" fill="url(#sun)"/>
+      ${[[118, '#e2a64f'], [96, '#f2b8a2'], [74, '#e9c8a8']].map(([r, c]) => `<path d="M${150 - r} 300 V${300 - r * 0.2} A${r} ${r} 0 0 1 ${150 + r} ${300 - r * 0.2} V300" fill="none" stroke="${c}" stroke-width="16" opacity=".85"/>`).join('')}
+      <path d="M0 230 C60 200 110 214 150 226 C200 240 250 205 300 218 V300 H0Z" fill="url(#hill2)"/>
+      <path d="M0 262 C70 240 120 256 170 262 C220 268 260 250 300 256 V300 H0Z" fill="url(#hill1)"/>
+      <g fill="#5a2e20"><circle cx="138" cy="226" r="6"/><path d="M131 233 h14 l3 28 h-20z"/><circle cx="162" cy="224" r="6"/><path d="M154 231 h16 l6 30 h-28z" fill="#7a3a26"/>
+      <path d="M145 242 h10" stroke="#5a2e20" stroke-width="3"/></g>
+      ${ART.plume(40, 300, 1.3, -12, 11)}${ART.plume(258, 300, 1.4, 10, 17)}${ART.plume(276, 300, 1.1, 22, 23)}
+      <path d="M118 130 q-6 -6 -12 0 M188 116 q-5 -5 -10 0" stroke="#7a3a26" stroke-width="2" fill="none"/>`
+  },
+
+  map() {
+    return `<rect width="320" height="200" fill="#f6ead6"/>
+      <path d="M0 0 H107 V200 H0Z" fill="#000" opacity=".03"/><path d="M213 0 H320 V200 H213Z" fill="#000" opacity=".05"/>
+      <path d="M107 0 V200 M213 0 V200" stroke="#cdb491" stroke-width="1"/>
+      <path d="M0 150 C60 120 90 170 150 140 C210 110 250 150 320 120" stroke="#a9c3d8" stroke-width="16" fill="none" opacity=".7"/>
+      <path d="M30 0 C40 60 20 120 60 200 M250 0 C230 70 280 120 260 200" stroke="#e3cfae" stroke-width="7" fill="none"/>
+      <path d="M0 70 H320" stroke="#e3cfae" stroke-width="5"/>
+      ${[[60, 40], [180, 30], [270, 70], [90, 110]].map(([x, y]) => `<circle cx="${x}" cy="${y}" r="10" fill="#c7cfae" opacity=".8"/>`).join('')}
+      <path class="map__route" pathLength="1" d="M28 178 C70 150 60 110 110 100 C160 90 150 50 200 56 C230 60 236 80 238 92" stroke="#c96f4f" stroke-width="3" stroke-dasharray="1" fill="none"/>
+      <g class="map__pin" transform="translate(238 92)"><path d="M0 0 C-12 -14 -14 -26 -6 -32 C-2 -35 0 -32 0 -30 C0 -32 2 -35 6 -32 C14 -26 12 -14 0 0Z" fill="#c96f4f"/></g>
+      <text x="22" y="194" font-family="Caveat" font-size="15" fill="#7a3a26">you are here</text>
+      <text x="196" y="40" font-family="Caveat" font-size="16" fill="#7a3a26">we’re here!</text>`
+  },
+
+  stamp() {
+    const holes = []
+    for (let i = 0; i <= 10; i++) holes.push(`<circle cx="${i * 10}" cy="0" r="3.4"/><circle cx="${i * 10}" cy="120" r="3.4"/>`)
+    for (let i = 0; i <= 12; i++) holes.push(`<circle cx="0" cy="${i * 10}" r="3.4"/><circle cx="100" cy="${i * 10}" r="3.4"/>`)
+    return `<mask id="perf"><rect width="100" height="120" fill="#fff"/><g fill="#000">${holes.join('')}</g></mask>
+      <g mask="url(#perf)"><rect width="100" height="120" fill="#fbf3e6"/>
+      <rect x="8" y="8" width="84" height="104" fill="url(#sky)"/><circle cx="50" cy="66" r="20" fill="url(#sun)"/>
+      <path d="M8 92 C30 80 60 96 92 86 V112 H8Z" fill="url(#hill1)"/>
+      <text x="50" y="26" text-anchor="middle" font-family="Jost" font-weight="600" font-size="10" fill="#7a3a26" letter-spacing="1">LOVE · ${F.year}</text></g>`
+  },
 }
 
-/* ---------------------------------------------------------------- timing (ms from the tap) */
-const TIMELINE = {
-  tap: 0, // the seal glows
-  light: 450, // a line of light opens down the seam
-  doors: 1000, // doors swing inward, petals burst out
-  through: 2700, // light floods, the camera moves through the arch
-  card: 3400, // frame, corners, flowers and Ganesha draw in
-  text: 4500, // names are written in gold, then date and venue
-  ready: 10000, // scrolling unlocked, controls in
-  tour: 12000,
-}
+/* ---------------------------------------------------------------- fill the cards */
+function paint() {
+  $('#defs').innerHTML = ART.defs
+  $$('[data-art]').forEach((el) => (el.innerHTML = ART[el.dataset.art]()))
+  $$('[data-art-html="ganesha"]').forEach((el) => (el.outerHTML = ganeshaSvg()))
 
-const TIMELINE_REDUCED = { tap: 0, light: 50, doors: 100, through: 300, card: 500, text: 700, ready: 1500, tour: null }
-
-// The DK crest that opens the page, before the doors
-const INTRO = { draw: 150, docked: 4600, done: 6000 }
-const INTRO_REDUCED = { draw: 0, docked: 1200, done: 1700 }
-
-/* ---------------------------------------------------------------- helpers */
-const $ = (sel, root = document) => root.querySelector(sel)
-const $$ = (sel, root = document) => [...root.querySelectorAll(sel)]
-
-const MONTHS = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
-const WEEKDAYS = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']
-
-// Calendar dates are read as UTC parts, so no local timezone can shift them
-function parseDay(iso) {
-  const [y, m, d] = iso.split('-').map(Number)
-  return new Date(Date.UTC(y, m - 1, d))
-}
-
-function longDate(day) {
-  return `${day.getUTCDate()} ${MONTHS[day.getUTCMonth()]} ${day.getUTCFullYear()}`
-}
-
-function fullDate(iso) {
-  const day = parseDay(iso)
-  return `${WEEKDAYS[day.getUTCDay()]}, ${longDate(day)}`
-}
-
-function clockLabel(hhmm) {
-  const [h, m] = hhmm.split(':').map(Number)
-  return `${((h + 11) % 12) + 1}:${String(m).padStart(2, '0')} ${h >= 12 ? 'PM' : 'AM'}`
-}
-
-function escapeHtml(s) {
-  return String(s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c])
-}
-
-const rand = (a, b) => a + Math.random() * (b - a)
-
-/* ---------------------------------------------------------------- derived fields */
-function buildFields(d) {
-  const day = parseDay(d.date)
-  const [first, second] = d.brideFirst ? [d.bride, d.groom] : [d.groom, d.bride]
-  const digits = String(d.rsvpWhatsApp || '').replace(/\D/g, '')
-  return {
-    ...d,
-    firstName: first.name,
-    firstSurname: first.surname,
-    secondName: second.name,
-    secondSurname: second.surname,
-    firstInitial: first.name.charAt(0),
-    secondInitial: second.name.charAt(0),
-    introNames: `${first.name} & ${second.name}`,
-    monthName: MONTHS[day.getUTCMonth()],
-    dayNumber: String(day.getUTCDate()),
-    weekdayName: WEEKDAYS[day.getUTCDay()],
-    yearNumber: String(day.getUTCFullYear()),
-    dateLong: longDate(day),
-    timeLabel: clockLabel(d.time),
-    mapUrl: d.mapUrl || `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(`${d.venue}, ${d.address}, ${d.city}`)}`,
-    rsvpUrl: digits
-      ? `https://wa.me/${digits}?text=${encodeURIComponent(`Namaste! RSVP for ${first.name} & ${second.name}'s wedding: `)}`
-      : '',
-    rsvpBy: longDate(parseDay(d.rsvpBy)),
-    giftText: d.gift.text,
-    giftButton: d.gift.button,
-    giftUrl: d.gift.url,
+  const dd = String(F.dayNumber).padStart(2, '0')
+  const mm = String(F.month + 1).padStart(2, '0')
+  const fields = {
+    ...F,
+    mono: `${F.monogram[0]}${F.monogram[1]}`,
+    firstName: F.first.name,
+    secondName: F.second.name,
+    firstFull: `${F.first.name} ${F.first.surname}`,
+    secondFull: `${F.second.name} ${F.second.surname}`,
+    shloka: `॥ ${F.blessing} ॥`,
+    flight: `KD ${dd}${mm}`,
+    dateShort: `${dd} ${F.monthName.slice(0, 3).toUpperCase()} ${F.year}`,
+    familyLine: F.families.map((f) => f.names[0].split(' ').slice(-1)[0]).join(' & ') + ' families',
   }
-}
-
-/* ---------------------------------------------------------------- artwork */
-function paintArt() {
-  const [m1, m2] = invitationData.monogram
-  $('#art-defs').innerHTML = `${Art.defs()}<g id="door-art">${Art.doors(m1, m2)}</g>`
-  const inner = (svg) => svg.replace(/^<svg[^>]*>|<\/svg>$/g, '')
-
-  const painters = {
-    facade: () => Art.facade(),
-    monogram: () => Art.monogram(m1, m2),
-    watermark: () => Art.mandala(0, 0, 190, '#c8774f', 1),
-    mandala: () => Art.mandala(0, 0, 190),
-    corner: () => Art.corner(),
-    cluster: (el) => {
-      const flip = { x: 'translate(300 0) scale(-1 1)', y: 'translate(0 300) scale(1 -1)' }[el.dataset.flip] || ''
-      return `<g transform="${flip}"><g class="sway">${Art.cluster(Number(el.dataset.seed) || 1, 290)}</g></g>`
-    },
-    ganesha: () => Art.ganesha(),
-    divider: () => inner(Art.divider()),
-    garland: () => Art.swag(0, 300, 12, 70, 3) + Art.swag(300, 600, 12, 56, 4) + Art.swag(600, 900, 12, 70, 5),
-    wreath: () => Art.wreath(128),
-    diyas: () => Art.diyaRow(),
-    arch: () =>
-      `<path d="${Art.arch(10, 290, 190, 20, 392, 7, 9)}" fill="url(#gEmeraldR)" stroke="url(#gGold)" stroke-width="2.5"/>` +
-      `<path d="${Art.arch(24, 276, 192, 38, 378, 7, 8)}" fill="none" stroke="#c9a24b" stroke-width="1"/>` +
-      Art.mandala(150, 112, 44) +
-      `<g transform="translate(16 392) scale(.32 -.32)">${Art.cluster(51, 290)}</g>` +
-      `<g transform="translate(284 392) scale(-.32 -.32)">${Art.cluster(52, 290)}</g>`,
-  }
-
-  $$('[data-art]').forEach((el) => {
-    const paint = painters[el.dataset.art]
-    if (paint) el.innerHTML = paint(el)
-  })
-
-  if (!invitationData.showGanesha) {
-    $('.ganesha').remove()
-    $('.shloka').remove()
-  }
-}
-
-/* ---------------------------------------------------------------- content */
-function render(fields) {
-  document.title = `${fields.firstName} & ${fields.secondName} — Wedding Invitation`
-
-  $$('[data-field]').forEach((el) => {
-    el.textContent = fields[el.dataset.field] ?? ''
-  })
-
-  // A control without a destination is hidden, never left dead
+  $$('[data-field]').forEach((el) => (el.textContent = fields[el.dataset.field] ?? ''))
   $$('[data-href]').forEach((el) => {
     const href = fields[el.dataset.href]
     if (href) el.href = href
     else el.hidden = true
   })
+  document.title = `${F.first.name} & ${F.second.name} — our little scrapbook`
 
-  $('[data-list="families"]').innerHTML = fields.families
-    .map(
-      (f, i) => `<div class="family reveal" style="--d: ${i + 4}">
-        <p class="caps family__label">${escapeHtml(f.label)}</p>
-        <p class="family__names">${f.names.map(escapeHtml).join('<br />')}</p></div>`,
-    )
-    .join('')
-
-  $('[data-list="functions"]').innerHTML = fields.functions
-    .map((fn, i) => {
-      const date = fn.main ? fields.date : fn.date
-      const time = fn.main ? fields.time : fn.time
-      const venue = fn.main ? `${fields.venue}, ${fields.city}` : fn.venue
-      const when = date ? `${fullDate(date)}${time ? ` · ${clockLabel(time)}` : ''}` : 'Details to follow'
-      return `<article class="event reveal reveal--rise" style="--d: ${i % 2 + 2}">
-        <span class="event__icon">${Art.icon(fn.icon)}</span>
-        <h3 class="event__name">${escapeHtml(fn.name)}</h3>
-        <p class="caps event__when">${escapeHtml(when)}</p>
-        ${venue ? `<p class="event__venue">${escapeHtml(venue)}</p>` : ''}
-        ${fn.dress ? `<p class="event__dress">Dress code · ${escapeHtml(fn.dress)}</p>` : ''}
-      </article>`
-    })
-    .join('')
-
-  $('[data-list="story"]').innerHTML = fields.story
-    .map((p, i) => `<p class="reveal" style="--d: ${i + 2}">${escapeHtml(p)}</p>`)
-    .join('')
-
-  $('[data-list="hotels"]').innerHTML = fields.hotels
-    .map(
-      (h, i) => `<article class="hotel reveal" style="--d: ${i + 2}">
-        <h3 class="hotel__name">${escapeHtml(h.name)}</h3>
-        ${h.note ? `<p class="hotel__note">${escapeHtml(h.note)}</p>` : ''}
-        ${h.url ? `<a class="btn" href="${escapeHtml(h.url)}" target="_blank" rel="noopener">Book your stay</a>` : ''}
-      </article>`,
-    )
-    .join('')
-
-  $('[data-list="contacts"]').innerHTML = fields.contacts
+  $('[data-list="story"]').innerHTML = F.story.map((s) => `<p>${escapeHtml(s)}</p>`).join('')
+  $('[data-list="contacts"]').innerHTML = F.contacts
     .map((c) => {
       const tel = String(c.phone || '').replace(/[^\d+]/g, '')
       return `<p>${escapeHtml(c.name)}${tel ? ` · <a href="tel:${tel}">${escapeHtml(c.phone)}</a>` : ''}</p>`
     })
     .join('')
 
-  // Optional sections disappear when their content is empty
-  $$('[data-optional]').forEach((section) => {
-    const v = fields[section.dataset.optional]
-    if (!v || (Array.isArray(v) && v.length === 0)) section.remove()
-  })
+  const colours = ['#c96f4f', '#e2a64f', '#a8b59a', '#f2b8a2', '#b5532f', '#d9b88f']
+  $('[data-list="events"]').innerHTML = F.events
+    .map((e, i) => `<div class="ticket" style="--c:${colours[i % colours.length]};--r:${((i % 2 ? 1 : -1) * (1 + (i % 3))).toFixed(1)}deg">
+      <div class="ticket__main"><small>ADMIT TWO · No. ${String(i + 1).padStart(2, '0')}</small><b>${escapeHtml(e.name)}</b><span>${escapeHtml(e.short)}</span>${e.place ? `<span class="ticket__place">${escapeHtml(e.place)}</span>` : ''}${e.dress ? `<span class="ticket__place">dress: ${escapeHtml(e.dress)}</span>` : ''}</div>
+      <div class="ticket__stub" aria-hidden="true"><b>${String(i + 1).padStart(2, '0')}</b></div></div>`)
+    .join('')
+
+  // the typewritten note
+  const famLines = F.families.map((f) => `${f.label.toUpperCase()}\n${f.names.join('\n& ')}`).join('\n\n')
+  const note = `${F.openingMessage},\n\n${famLines}\n\n${F.inviteLine} —\n${F.first.name} & ${F.second.name}.\n\n${F.familiesMessage}`
+  $('#note-text').textContent = note
+  $('#typed').dataset.text = note
+
+  // barcode: random bars, seeded by the date so it never changes
+  let s = F.dayNumber * 97 + F.month * 13
+  const bars = []
+  for (let x = 0; x < 100; ) {
+    s = (s * 9301 + 49297) % 233280
+    const w = 0.6 + (s / 233280) * 2.4
+    bars.push(`#3a2018 ${x.toFixed(1)}% ${(x + w).toFixed(1)}%`, `transparent ${(x + w).toFixed(1)}% ${(x + w + 1.2).toFixed(1)}%`)
+    x += w + 1.2
+  }
+  $('.barcode').style.background = `linear-gradient(90deg, ${bars.join(', ')})`
 }
 
-/* ---------------------------------------------------------------- ambient particles */
-function seedParticles() {
-  for (const dust of $$('.dust, .intro__dust')) {
-    for (let i = 0; i < 18; i++) {
-      const m = document.createElement('i')
-      m.className = 'mote'
-      m.style.cssText = `--x:${rand(4, 96).toFixed(1)}%;--s:${rand(0.6, 1.6).toFixed(2)}cqw;--t:${rand(7, 13).toFixed(1)}s;--delay:${(-rand(0, 12)).toFixed(1)}s;--sway:${rand(-8, 8).toFixed(1)}cqw`
-      dust.append(m)
-    }
+/* ---------------------------------------------------------------- typewriter */
+function typewriter(el, fast) {
+  const text = el.dataset.text
+  if (fast) {
+    el.textContent = text
+    return () => {}
   }
-
-  const sparkles = $('.sparkles')
-  for (let i = 0; i < 12; i++) {
-    const s = document.createElement('i')
-    s.className = 'sparkle'
-    s.innerHTML = '<svg viewBox="-10 -10 20 20"><use href="#star"/></svg>'
-    s.style.cssText = `--x:${rand(12, 84).toFixed(1)}%;--y:${rand(26, 60).toFixed(1)}%;--s:${rand(2, 4).toFixed(1)}cqw;--t:${rand(2.4, 4).toFixed(1)}s;--delay:${rand(0, 3).toFixed(1)}s`
-    sparkles.append(s)
-  }
-
-  const card = $('#card')
-  for (let i = 0; i < 9; i++) {
-    const p = document.createElement('i')
-    p.className = 'drift-petal'
-    p.setAttribute('aria-hidden', 'true')
-    p.style.cssText = `--x:${(i * 11 + rand(0, 6)).toFixed(1)}%;--s:${rand(2.4, 4).toFixed(2)}cqw;--t:${rand(9, 14).toFixed(1)}s;--delay:${(i * 1.3).toFixed(1)}s;--sway:${rand(-10, 10).toFixed(1)}cqw`
-    card.append(p)
-  }
-}
-
-// Petals and marigold flowers thrown out as the doors open
-function burstPetals() {
-  const burst = $('.burst')
-  const colours = ['radial-gradient(circle at 35% 35%, #fffdf8, #f3e2c7 70%)', 'radial-gradient(circle at 40% 40%, #f7c59a, #d9805f)', 'radial-gradient(circle at 40% 40%, #fbf3e6, #ead7b8)', 'radial-gradient(circle at 40% 40%, #fbd7b4, #e2a64f)', 'radial-gradient(circle at 40% 40%, #fff, #f2b8a2)']
-  const frag = document.createDocumentFragment()
-  for (let i = 0; i < 40; i++) {
-    const a = rand(0, Math.PI * 2)
-    const dist = rand(18, 62)
-    const p = document.createElement('i')
-    p.className = 'burst__petal'
-    p.style.cssText =
-      `--x:${(Math.cos(a) * dist).toFixed(1)}cqw;--y:${(Math.sin(a) * dist * 1.2 - 12).toFixed(1)}cqw;` +
-      `--r:${rand(-260, 260).toFixed(0)}deg;--s:${rand(2.2, 4.6).toFixed(2)}cqw;--t:${rand(2.8, 4.2).toFixed(2)}s;` +
-      `--delay:${rand(0, 0.35).toFixed(2)}s;--c:${colours[i % colours.length]}`
-    frag.append(p)
-  }
-  burst.append(frag)
-}
-
-/* ---------------------------------------------------------------- countdown */
-function createCountdown(fields) {
-  const target = Date.parse(`${fields.date}T${fields.time}:00${fields.utcOffset}`)
-  const out = Object.fromEntries($$('[data-count]').map((el) => [el.dataset.count, el]))
+  let i = 0
   let timer = 0
-  let raf = 0
-
-  function parts(now) {
-    const ms = Math.max(0, target - now)
-    return {
-      days: Math.floor(ms / 86400000),
-      hours: Math.floor(ms / 3600000) % 24,
-      minutes: Math.floor(ms / 60000) % 60,
-      seconds: Math.floor(ms / 1000) % 60,
-    }
+  el.textContent = ''
+  el.classList.add('is-typing')
+  const step = () => {
+    i += text[i] === '\n' ? 1 : 1 + (Math.random() < 0.2 ? 1 : 0)
+    el.textContent = text.slice(0, i)
+    if (i < text.length) timer = setTimeout(step, text[i - 1] === '\n' ? 180 : 22 + Math.random() * 30)
+    else el.classList.remove('is-typing')
   }
+  timer = setTimeout(step, 300)
+  return () => clearTimeout(timer)
+}
 
-  function paint(p) {
-    for (const k in p) out[k].textContent = String(p[k]).padStart(2, '0')
+/* ---------------------------------------------------------------- flip clock */
+function createClock() {
+  const units = Object.fromEntries($$('.flip').map((el) => [el.dataset.unit, el]))
+  const last = {}
+  function set(unit, value) {
+    const el = units[unit]
+    const v = String(value).padStart(2, '0')
+    if (last[unit] === v) return
+    last[unit] = v
+    const card = $('.flip__card', el)
+    card.classList.remove('is-flipping')
+    void card.offsetWidth
+    card.dataset.next = v
+    card.classList.add('is-flipping')
+    setTimeout(() => ($('b', card).textContent = v), 240)
   }
-
   return {
-    // Count up from zero once, then tick live every second
-    start(reduced) {
-      this.stop()
-      const final = parts(Date.now())
-      if (reduced) {
-        paint(final)
-      } else {
-        const t0 = performance.now()
-        const step = (t) => {
-          const k = Math.min(1, (t - t0) / 1800)
-          const e = 1 - Math.pow(1 - k, 3)
-          paint(Object.fromEntries(Object.entries(final).map(([key, v]) => [key, Math.round(v * e)])))
-          if (k < 1) raf = requestAnimationFrame(step)
-        }
-        raf = requestAnimationFrame(step)
-      }
-      timer = setTimeout(function tick() {
-        paint(parts(Date.now()))
-        timer = setTimeout(tick, 1000 - (Date.now() % 1000))
-      }, reduced ? 1000 : 1900)
-    },
-    stop() {
-      clearTimeout(timer)
-      cancelAnimationFrame(raf)
-      paint({ days: 0, hours: 0, minutes: 0, seconds: 0 })
+    tick() {
+      const p = countdownParts(F.target)
+      for (const k in p) set(k, p[k])
     },
   }
 }
 
-/* ---------------------------------------------------------------- music */
-function createMusic(cfg, button) {
-  const state = { ok: false, on: false, wanted: false, revealed: false, fadeRaf: 0 }
-  if (!cfg || !cfg.src) return { start() {}, restart() {}, reveal() {} }
-
-  const audio = new Audio()
-  audio.loop = true
-  audio.preload = 'auto'
-  audio.volume = 0
-  audio.addEventListener('canplay', () => {
-    state.ok = true
-    if (state.revealed) button.hidden = false
-  }, { once: true })
-  audio.addEventListener('error', () => {
-    state.ok = false
-    button.hidden = true
-  })
-  audio.src = cfg.src
-
-  function fadeTo(target, ms, then) {
-    cancelAnimationFrame(state.fadeRaf)
-    const from = audio.volume
-    const t0 = performance.now()
-    const step = (t) => {
-      const k = Math.min(1, (t - t0) / ms)
-      audio.volume = Math.max(0, Math.min(1, from + (target - from) * k))
-      if (k < 1) state.fadeRaf = requestAnimationFrame(step)
-      else if (then) then()
-    }
-    state.fadeRaf = requestAnimationFrame(step)
-  }
-
-  function setOn(on) {
-    state.on = on
-    button.setAttribute('aria-pressed', String(on))
-    if (on) {
-      audio.play().then(() => fadeTo(cfg.volume ?? 0.6, 1600)).catch(() => {
-        state.on = false
-        button.setAttribute('aria-pressed', 'false')
-      })
-    } else {
-      fadeTo(0, 700, () => audio.pause())
-    }
-  }
-
-  button.addEventListener('click', () => {
-    state.wanted = !state.on
-    setOn(!state.on)
-  })
-
-  document.addEventListener('visibilitychange', () => {
-    if (!state.on) return
-    if (document.hidden) audio.pause()
-    else audio.play().catch(() => {})
-  })
-
-  return {
-    // Must run inside the tap handler so browsers allow playback
-    start() {
-      state.wanted = true
-      setOn(true)
-    },
-    restart() {
-      if (!state.wanted) return
-      audio.currentTime = 0
-      audio.volume = 0
-      setOn(true)
-    },
-    reveal() {
-      state.revealed = true
-      if (state.ok) button.hidden = false
-    },
-  }
-}
-
-/* ---------------------------------------------------------------- auto tour
-   Glides through every section, holding on each. Any wheel, touch or key
-   from the guest hands control straight back. */
-function createTour(scroller) {
-  let raf = 0
-  let timer = 0
+/* ---------------------------------------------------------------- dragging cards around the table */
+function makeDraggable(card, onTap) {
+  let sx = 0
+  let sy = 0
+  let ox = 0
+  let oy = 0
+  let moved = false
   let active = false
-
-  const ease = (t) => (t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2)
-
-  function stops() {
-    const view = scroller.clientHeight
-    const max = scroller.scrollHeight - view
-    const list = []
-    for (const s of $$('.scroller > section:not(.hero)')) {
-      let y = s.offsetTop
-      const end = s.offsetTop + s.offsetHeight - view
-      list.push({ y: Math.min(y, max), hold: 2600 })
-      while (y + view * 0.7 < end) {
-        y += view * 0.7
-        list.push({ y: Math.min(y, max), hold: 2200 })
-      }
-    }
-    list.push({ y: max, hold: 0 })
-    return list.filter((s, i, a) => i === 0 || Math.abs(s.y - a[i - 1].y) > 8)
-  }
-
-  function glide(to, done) {
-    const from = scroller.scrollTop
-    const dur = Math.max(900, Math.min(2300, (Math.abs(to - from) / scroller.clientHeight) * 1500))
-    const t0 = performance.now()
-    const step = (t) => {
-      if (!active) return
-      const k = Math.min(1, (t - t0) / dur)
-      scroller.scrollTop = from + (to - from) * ease(k)
-      if (k < 1) raf = requestAnimationFrame(step)
-      else done()
-    }
-    raf = requestAnimationFrame(step)
-  }
-
-  function stop() {
-    active = false
-    cancelAnimationFrame(raf)
-    clearTimeout(timer)
-  }
-
-  for (const type of ['wheel', 'touchstart', 'pointerdown', 'keydown']) {
-    scroller.addEventListener(type, stop, { passive: true })
-  }
-
-  return {
-    play() {
-      stop()
+  card.addEventListener('pointerdown', (e) => {
+    if (e.target.closest('a, button')) return
+    // on touch screens the cards scroll with the page; only a mouse or pen drags them
+    if (e.pointerType === 'touch') {
+      sx = e.clientX
+      sy = e.clientY
       active = true
-      const list = stops()
-      let i = 0
-      const next = () => {
-        if (!active || i >= list.length) return stop()
-        const { y, hold } = list[i++]
-        glide(y, () => {
-          timer = setTimeout(next, hold)
-        })
-      }
-      next()
-    },
-    stop,
-  }
-}
-
-/* ---------------------------------------------------------------- the player */
-function init() {
-  const stage = $('#stage')
-  const scroller = $('#scroller')
-  const palace = $('#palace')
-  const openBtn = $('#open-btn')
-  const replayBtn = $('#replay-btn')
-  const soundBtn = $('#sound-btn')
-  const reducedQuery = window.matchMedia('(prefers-reduced-motion: reduce)')
-
-  let fields
-  try {
-    paintArt()
-    fields = buildFields(invitationData)
-    render(fields)
-    seedParticles()
-  } catch (err) {
-    console.error('Invitation: check invitationData in script.js —', err)
-    return
-  }
-
-  const sections = $$('.scroller > section:not(.hero)')
-  const countdown = createCountdown(fields)
-  const music = createMusic(invitationData.music, soundBtn)
-  const tour = createTour(scroller)
-
-  // A run token makes timers left over from an earlier play harmless
-  let run = 0
-  let timers = []
-  let opened = false
-  let guestScrolled = false
-
-  const STATES = ['is-intro', 'is-docked', 'is-intro-done', 'is-tap', 'is-light', 'is-doors', 'is-through', 'is-card', 'is-text', 'is-ready']
-  const intro = $('#intro')
-  let introDone = false
-
-  for (const type of ['wheel', 'touchstart', 'keydown']) {
-    scroller.addEventListener(type, () => (guestScrolled = true), { passive: true })
-  }
-
-  function schedule(ms, fn) {
-    const token = run
-    timers.push(setTimeout(() => token === run && fn(), ms))
-  }
-
-  const io = new IntersectionObserver(
-    (entries) => {
-      for (const e of entries) {
-        if (!e.isIntersecting || e.target.classList.contains('is-in')) continue
-        e.target.classList.add('is-in')
-        if (e.target.id === 'countdown') countdown.start(reducedQuery.matches)
-      }
-    },
-    { root: scroller, threshold: 0.15 },
-  )
-  sections.forEach((s) => io.observe(s))
-
-  function play() {
-    const t = reducedQuery.matches ? TIMELINE_REDUCED : TIMELINE
-    opened = true
-    guestScrolled = false
-    schedule(t.tap, () => stage.classList.add('is-tap'))
-    schedule(t.light, () => stage.classList.add('is-light'))
-    schedule(t.doors, () => {
-      stage.classList.add('is-doors')
-      if (!reducedQuery.matches) burstPetals()
-    })
-    schedule(t.through, () => stage.classList.add('is-through'))
-    schedule(t.card, () => stage.classList.add('is-card'))
-    schedule(t.text, () => stage.classList.add('is-text'))
-    schedule(t.ready, () => {
-      stage.classList.add('is-ready')
-      stage.classList.remove('is-sealed')
-      palace.setAttribute('aria-hidden', 'true')
-      replayBtn.hidden = false
-      music.reveal()
-      scroller.focus({ preventScroll: true })
-    })
-    if (invitationData.autoTour && t.tour !== null) {
-      schedule(t.tour, () => !guestScrolled && tour.play())
+      moved = false
+      return
     }
+    active = true
+    moved = false
+    sx = e.clientX
+    sy = e.clientY
+    ox = parseFloat(card.style.getPropertyValue('--mx')) || 0
+    oy = parseFloat(card.style.getPropertyValue('--my')) || 0
+    card.setPointerCapture(e.pointerId)
+  })
+  card.addEventListener('pointermove', (e) => {
+    if (!active) return
+    if (e.pointerType === 'touch') {
+      if (Math.hypot(e.clientX - sx, e.clientY - sy) > 8) moved = true
+      return
+    }
+    const dx = e.clientX - sx
+    const dy = e.clientY - sy
+    if (!moved && Math.hypot(dx, dy) < 6) return
+    if (!moved) {
+      moved = true
+      card.classList.add('is-dragging')
+      card.style.zIndex = String(++makeDraggable.z)
+    }
+    card.style.setProperty('--mx', `${ox + dx}px`)
+    card.style.setProperty('--my', `${oy + dy}px`)
+  })
+  const end = () => {
+    if (!active) return
+    active = false
+    card.classList.remove('is-dragging')
+    if (!moved && onTap) onTap()
   }
+  card.addEventListener('pointerup', end)
+  card.addEventListener('pointercancel', end)
+}
+makeDraggable.z = 10
 
-  function reset() {
-    run++
-    timers.forEach(clearTimeout)
-    timers = []
-    tour.stop()
-    countdown.stop()
-    $('.burst').replaceChildren()
-    stage.classList.add('is-resetting')
-    stage.classList.remove(...STATES)
-    stage.classList.add('is-sealed')
-    sections.forEach((s) => {
-      s.classList.remove('is-in')
-      io.unobserve(s)
-      io.observe(s)
-    })
-    palace.removeAttribute('aria-hidden')
-    scroller.scrollTop = 0
-    void stage.offsetWidth // commit the reset frame before transitions return
-    requestAnimationFrame(() => requestAnimationFrame(() => stage.classList.remove('is-resetting')))
-  }
+/* ---------------------------------------------------------------- page */
+function init() {
+  paint()
+  const body = document.body
+  const music = createMusic(F.music, $('#sound-btn'), (on) => body.classList.toggle('is-playing', on))
+  const cards = $$('.card')
+  const replay = $('#replay-btn')
+  const clock = createClock()
+  let clockTimer = 0
+  let stopTyping = () => {}
+  let opened = false
+  let timers = []
+  const later = (ms, fn) => timers.push(setTimeout(fn, ms))
 
-  // The crest draws itself, then shrinks into the door seal. `then` runs once it has docked.
-  function playIntro(then) {
-    const t = reducedQuery.matches ? INTRO_REDUCED : INTRO
-    introDone = false
-    schedule(t.draw, () => stage.classList.add('is-intro'))
-    schedule(t.docked, () => stage.classList.add('is-docked'))
-    schedule(t.done, () => {
-      stage.classList.add('is-intro-done')
-      introDone = true
-      if (then) then()
-    })
-  }
+  cards.forEach((c) => makeDraggable(c, c.id === 'polaroid' ? () => c.classList.toggle('is-flipped') : null))
+  if (!window.matchMedia('(pointer: fine)').matches) $('.masthead__hint').textContent = 'tap the polaroid to turn it over'
+  $('#polaroid').addEventListener('keydown', (e) => {
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault()
+      e.currentTarget.classList.toggle('is-flipped')
+    }
+  })
 
-  // A tap during the crest skips straight to the doors, then opens them
-  function skipIntro() {
-    run++
-    timers.forEach(clearTimeout)
-    timers = []
-    stage.classList.add('is-intro', 'is-docked')
-    schedule(500, () => {
-      stage.classList.add('is-intro-done')
-      introDone = true
-      play()
+  // the note types itself out when it is first seen
+  const noteIo = new IntersectionObserver((entries) => {
+    if (entries.some((e) => e.isIntersecting) && body.classList.contains('is-open')) {
+      noteIo.disconnect()
+      stopTyping = typewriter($('#typed'), reducedMotion())
+    }
+  }, { threshold: 0.3 })
+
+  // cards fly out of the envelope to their places on the table
+  function scatter() {
+    const env = $('#open-btn').getBoundingClientRect()
+    const cx = env.left + env.width / 2
+    const cy = env.top + env.height / 2
+    cards.forEach((card, i) => {
+      const r = card.getBoundingClientRect()
+      const dx = cx - (r.left + r.width / 2)
+      const dy = cy - (r.top + r.height / 2)
+      card.style.transition = 'none'
+      card.style.transform = `translate(${dx}px, ${dy}px) rotate(${(i % 2 ? 1 : -1) * 25}deg) scale(0.2)`
+      card.style.opacity = '0'
+      void card.offsetWidth
+      card.style.transition = `transform 1.1s cubic-bezier(0.2, 0.8, 0.25, 1.05) ${i * 0.09}s, opacity 0.4s ease ${i * 0.09}s`
+      card.style.transform = ''
+      card.style.opacity = ''
     })
   }
 
   function open() {
     if (opened) return
-    music.start()
-    if (introDone) play()
-    else {
-      opened = true
-      skipIntro()
-    }
-  }
-
-  intro.addEventListener('click', open)
-  palace.addEventListener('click', open)
-  openBtn.addEventListener('click', (e) => {
-    e.stopPropagation()
-    open()
-  })
-
-  replayBtn.addEventListener('click', () => {
-    reset()
     opened = true
-    music.restart()
-    // Replay the crest, then open the doors on their own
-    playIntro(() => schedule(700, play))
-  })
+    music.start()
+    const fast = reducedMotion()
+    body.classList.add('is-opening')
+    later(fast ? 0 : 1300, () => {
+      body.classList.remove('is-sealed')
+      body.classList.add('is-open')
+      if (!fast) scatter()
+    })
+    later(fast ? 50 : 2600, () => {
+      body.classList.add('is-settled')
+      music.reveal()
+      replay.hidden = false
+      noteIo.observe($('.note'))
+      clock.tick()
+      clockTimer = setInterval(() => clock.tick(), 1000)
+    })
+  }
+  $('#open-btn').addEventListener('click', open)
 
-  playIntro()
+  replay.addEventListener('click', () => {
+    timers.forEach(clearTimeout)
+    timers = []
+    clearInterval(clockTimer)
+    stopTyping()
+    noteIo.disconnect()
+    replay.hidden = true
+    window.scrollTo({ top: 0, behavior: 'auto' })
+    cards.forEach((c) => {
+      c.classList.remove('is-flipped')
+      c.style.removeProperty('--mx')
+      c.style.removeProperty('--my')
+      c.style.zIndex = ''
+    })
+    $('#typed').textContent = ''
+    body.classList.remove('is-open', 'is-settled', 'is-opening')
+    body.classList.add('is-sealed')
+    opened = false
+    music.restart()
+    later(900, open)
+  })
 }
 
 if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init)

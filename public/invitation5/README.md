@@ -1,33 +1,44 @@
-# Lavender & Champagne — `/invitation5/`
+# L’Amour · The Wedding Issue — `/invitation5/`
 
-One of the seven Kirti & Dharmil invitations. The gallery at `/invite/` links all of them.
-
-**Look:** lavender mist with champagne gold, wisteria cascades, lilac peonies, eucalyptus, pearl swags and strings, fluttering butterflies. **Doors:** pearl-white doors with champagne inlay and peony medallions; the crest sits on deep violet.
-
-It uses the same sequence as `/invitation3/`:
-
-1. The DK crest draws itself on load, then shrinks onto the door seal.
-2. "Tap the seal to open": light down the seam, the doors swing open in 3D with a petal burst, then a flash
-   through the arch onto the card.
-3. Ganesha and the shloka, the names written in metallic foil, the date and venue.
-4. The auto tour through Families, Countdown, Celebrations, Venue, Story, Stay, Gifts and RSVP.
-
-The page has a Replay button and a sound button, and supports reduced motion.
+**Format:** Magazine with 3D page turns. One of the seven Kirti & Dharmil invitations; the gallery at `/invite/` links them all.
 
 ```
 invitation5/
-├── index.html   markup (intro, palace doors, card, eight sections)
-├── styles.css   shared layout + this theme's palette (:root) and theme block
-├── art.js       this theme's vector art: palette, flowers, garlands, side figures, palace front, doors, crest
-├── script.js    invitationData (all content), timelines, tour, countdown, music, replay
-└── assets/      audio/wedding-loop.mp3 (original loop); fonts/ and images/ are empty
+├── index.html   book shell, tap zones, folio, tools
+├── styles.css   page turns, editorial typography, every page layout
+├── script.js    wisteria/peony art, calendar, the eight pages, page-turn engine
+└── core.js      invitationData + shared helpers
 ```
 
-**Content** is in `invitationData` at the top of `script.js`: the same fields as `/invitation3/`. Lines marked
-`// PLACEHOLDER` still need the real date, venue, functions, RSVP number and contacts.
+**How it plays**
 
-**Regenerating:** this route was generated from `/invitation3/` by `scripts/invitation-themes.py`
-(`python3 scripts/invitation-themes.py public`). Regenerating rebuilds the code from `/invitation3/` and keeps
-this README, so make content edits in `invitation3/script.js` first, or re-apply them afterwards.
+1. The cover builds itself:
+   - the L’AMOUR masthead letters drop in;
+   - wisteria grows down from the top edge;
+   - a champagne arch draws itself, and "Kirti & Dharmil" is written into it;
+   - cover lines, peonies and a barcode follow.
+2. Tap (or swipe, or press →) to turn the page. Each turn is a 3D page flip around the spine, with a shadow
+   sweeping across. The pages:
+   1. **Contents:** Ganesha and the shloka, with an "In this issue" list where each entry jumps to its page.
+   2. **Feature:** "Two families, one celebration", with a drop cap and both families' names.
+   3. **Save the Date:** a giant date, a calendar with the day **circled by hand**, and a countdown.
+   4. **The Itinerary:** every function.
+   5. **Our Story:** a pull quote.
+   6. **The Venue:** an arched window with wisteria and a directions link.
+   7. **The back cover:** RSVP on violet, with a DK seal.
+3. A folio shows the page number. The corner curl hints that you can turn the page. Replay (top right) closes the
+   book back to the cover.
 
-All artwork is vector: gradients and shapes, with no photos or blur, so it stays sharp on any screen.
+## Edit the content
+
+All the wording lives in `invitationData` at the top of **`core.js`**: names, families, date, time, venue,
+functions, story, RSVP and contacts. Lines marked `// PLACEHOLDER` still need real details. `core.js` is the same
+in `invitation4/` to `invitation7/`, so to change all four designs at once, edit one copy and copy it over the
+other three.
+
+Music: `assets/audio/wedding-loop.mp3`, an original loop rendered by `scripts/invitation-music.py`. Playback
+starts with the first tap, and the sound control only appears once the track has loaded.
+
+All artwork is vector (SVG, CSS and canvas), so it stays sharp on any screen. The page works from `npm run dev`,
+from the production build, and opened straight from disk. With `prefers-reduced-motion`, everything still appears
+in order, without the movement.

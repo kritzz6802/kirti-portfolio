@@ -1,33 +1,45 @@
-# Terracotta Boho Sunset — `/invitation7/`
+# Our Little Scrapbook — `/invitation7/`
 
-One of the seven Kirti & Dharmil invitations. The gallery at `/invite/` links all of them.
-
-**Look:** peach and terracotta, a round arch framed by rainbow bands, a sun disc, pampas grass in terracotta vases, dried palm fans, wooden-bead swags and macrame strings. **Doors:** sand-coloured doors with copper inlay and daisy medallions; the crest sits on cream sand.
-
-It uses the same sequence as `/invitation3/`:
-
-1. The DK crest draws itself on load, then shrinks onto the door seal.
-2. "Tap the seal to open": light down the seam, the doors swing open in 3D with a petal burst, then a flash
-   through the arch onto the card.
-3. Ganesha and the shloka, the names written in metallic foil, the date and venue.
-4. The auto tour through Families, Countdown, Celebrations, Venue, Story, Stay, Gifts and RSVP.
-
-The page has a Replay button and a sound button, and supports reduced motion.
+**Format:** Envelope + draggable cards (full-width page). One of the seven Kirti & Dharmil invitations; the gallery at `/invite/` links them all.
 
 ```
 invitation7/
-├── index.html   markup (intro, palace doors, card, eight sections)
-├── styles.css   shared layout + this theme's palette (:root) and theme block
-├── art.js       this theme's vector art: palette, flowers, garlands, side figures, palace front, doors, crest
-├── script.js    invitationData (all content), timelines, tour, countdown, music, replay
-└── assets/      audio/wedding-loop.mp3 (original loop); fonts/ and images/ are empty
+├── index.html   envelope + the table of cards
+├── styles.css   linen table, envelope, every card's design, cassette, layouts for phone/tablet/desktop
+├── script.js    art (sunset, map, stamp, pampas), fly-out, typewriter, flip clock, drag, polaroid flip
+└── core.js      invitationData + shared helpers
 ```
 
-**Content** is in `invitationData` at the top of `script.js`: the same fields as `/invitation3/`. Lines marked
-`// PLACEHOLDER` still need the real date, venue, functions, RSVP number and contacts.
+**How it plays**
 
-**Regenerating:** this route was generated from `/invitation3/` by `scripts/invitation-themes.py`
-(`python3 scripts/invitation-themes.py public`). Regenerating rebuilds the code from `/invitation3/` and keeps
-this README, so make content edits in `invitation3/script.js` first, or re-apply them afterwards.
+1. A kraft envelope tied with twine, with a terracotta **DK** wax seal and pampas tucked in. Tap it and the twine
+   slips off, the seal pops and the flap opens.
+2. Every card flies out of the envelope to its place on a linen table:
+   - a Ganesha sticker;
+   - a **polaroid** that turns over to show your story;
+   - a typed note that **types itself out** with the families' names;
+   - a **"KD Airways" boarding pass** (flight number from the date, gate = venue);
+   - colourful **ticket stubs** for each function;
+   - a **flip-clock countdown**;
+   - a folded **map** with the route drawing itself to a heart pin;
+   - an **airmail RSVP postcard** with a stamp and postmark.
+3. With a mouse, drag cards around the table. On touch screens the cards scroll with the page, and a tap flips
+   the polaroid.
+4. Music is a little **cassette** (bottom left) whose reels spin while it plays. "Seal it again" (bottom right)
+   puts everything back in the envelope.
 
-All artwork is vector: gradients and shapes, with no photos or blur, so it stays sharp on any screen.
+This one is a full-width page: a single column on phones, two columns on tablets and three on desktop.
+
+## Edit the content
+
+All the wording lives in `invitationData` at the top of **`core.js`**: names, families, date, time, venue,
+functions, story, RSVP and contacts. Lines marked `// PLACEHOLDER` still need real details. `core.js` is the same
+in `invitation4/` to `invitation7/`, so to change all four designs at once, edit one copy and copy it over the
+other three.
+
+Music: `assets/audio/wedding-loop.mp3`, an original loop rendered by `scripts/invitation-music.py`. Playback
+starts with the first tap, and the sound control only appears once the track has loaded.
+
+All artwork is vector (SVG, CSS and canvas), so it stays sharp on any screen. The page works from `npm run dev`,
+from the production build, and opened straight from disk. With `prefers-reduced-motion`, everything still appears
+in order, without the movement.

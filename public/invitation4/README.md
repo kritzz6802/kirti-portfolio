@@ -1,33 +1,43 @@
-# Pichwai Pastel — `/invitation4/`
+# The Pichwai Scroll — `/invitation4/`
 
-One of the seven Kirti & Dharmil invitations. The gallery at `/invite/` links all of them.
-
-**Look:** blush pink and powder blue, Pichwai-style lotus pond, white Kamdhenu cows with pink saddle cloths, lotus pots on the pillars, pink-and-white flower garlands. **Doors:** powder-blue doors with gold inlay and lotus medallions.
-
-It uses the same sequence as `/invitation3/`:
-
-1. The DK crest draws itself on load, then shrinks onto the door seal.
-2. "Tap the seal to open": light down the seam, the doors swing open in 3D with a petal burst, then a flash
-   through the arch onto the card.
-3. Ganesha and the shloka, the names written in metallic foil, the date and venue.
-4. The auto tour through Families, Countdown, Celebrations, Venue, Story, Stay, Gifts and RSVP.
-
-The page has a Replay button and a sound button, and supports reduced motion.
+**Format:** Unrolling scroll. One of the seven Kirti & Dharmil invitations; the gallery at `/invite/` links them all.
 
 ```
 invitation4/
-├── index.html   markup (intro, palace doors, card, eight sections)
-├── styles.css   shared layout + this theme's palette (:root) and theme block
-├── art.js       this theme's vector art: palette, flowers, garlands, side figures, palace front, doors, crest
-├── script.js    invitationData (all content), timelines, tour, countdown, music, replay
-└── assets/      audio/wedding-loop.mp3 (original loop); fonts/ and images/ are empty
+├── index.html   closed scroll + the open scroll's sections
+├── styles.css   roll, rods, untie/unroll animation, paper, sections
+├── art.js       lotus, cows, Pichwai border tile, toran, date medallion, bell, pond, koi
+├── script.js    painting, reveal-on-scroll, rods that turn with the scroll, synthesised temple bell
+└── core.js      invitationData + shared helpers
 ```
 
-**Content** is in `invitationData` at the top of `script.js`: the same fields as `/invitation3/`. Lines marked
-`// PLACEHOLDER` still need the real date, venue, functions, RSVP number and contacts.
+**How it plays**
 
-**Regenerating:** this route was generated from `/invitation3/` by `scripts/invitation-themes.py`
-(`python3 scripts/invitation-themes.py public`). Regenerating rebuilds the code from `/invitation3/` and keeps
-this README, so make content edits in `invitation3/script.js` first, or re-apply them afterwards.
+1. A rolled painted scroll with gold finials, tied with a pink tassel and a name tag, floats above a lotus pond.
+2. Tap it and the tie slips off, the tassel and tag fall away, and the scroll unrolls downward between two
+   wooden rods.
+3. Scroll inside it; the rods' grain turns as you scroll. In order:
+   - a flower toran, then Ganesha in a lotus arch, शुभ विवाह and the names;
+   - two Pichwai cows facing a lotus;
+   - the families in jharokha windows;
+   - a blooming lotus date medallion with a countdown in lotus buds;
+   - painted arched panels for each function;
+   - a pond map with ripples;
+   - the story;
+   - a **temple bell you can ring** (synthesised in the browser), then the RSVP;
+   - a koi pond at the end.
+4. Replay (bottom right) scrolls back up, rolls the scroll closed, and plays again.
 
-All artwork is vector: gradients and shapes, with no photos or blur, so it stays sharp on any screen.
+## Edit the content
+
+All the wording lives in `invitationData` at the top of **`core.js`**: names, families, date, time, venue,
+functions, story, RSVP and contacts. Lines marked `// PLACEHOLDER` still need real details. `core.js` is the same
+in `invitation4/` to `invitation7/`, so to change all four designs at once, edit one copy and copy it over the
+other three.
+
+Music: `assets/audio/wedding-loop.mp3`, an original loop rendered by `scripts/invitation-music.py`. Playback
+starts with the first tap, and the sound control only appears once the track has loaded.
+
+All artwork is vector (SVG, CSS and canvas), so it stays sharp on any screen. The page works from `npm run dev`,
+from the production build, and opened straight from disk. With `prefers-reduced-motion`, everything still appears
+in order, without the movement.
