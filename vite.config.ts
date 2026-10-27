@@ -1,10 +1,10 @@
 import { defineConfig, type Connect, type Plugin } from 'vite'
 import react from '@vitejs/plugin-react'
 
-// The invitations are standalone static pages in public/invitation/, public/invitation2/
-// and public/invitation3/. Vite's SPA fallback would otherwise answer them with the
-// portfolio's index.html.
-const STATIC_PAGES = ['/invitation', '/invitation2', '/invitation3']
+// The invitations (public/invitation/, public/invitation2/ … invitation7/) and the
+// gallery that links them (public/invite/) are standalone static pages. Vite's SPA
+// fallback would otherwise answer them with the portfolio's index.html.
+const STATIC_PAGE = /^\/(invite|invitation\d*)$/
 
 function invitationRoute(): Plugin {
   // Typed loosely: this project has no @types/node, so Connect's request type has no `url`
@@ -12,13 +12,13 @@ function invitationRoute(): Plugin {
     const req = rawReq as { url?: string }
     const [path, query = ''] = (req.url ?? '').split('?')
     const suffix = query ? `?${query}` : ''
-    if (STATIC_PAGES.indexOf(path) !== -1) {
+    if (STATIC_PAGE.test(path)) {
       res.statusCode = 301
       res.setHeader('Location', `${path}/${suffix}`)
       res.end()
       return
     }
-    if (path.slice(-1) === '/' && STATIC_PAGES.indexOf(path.slice(0, -1)) !== -1) req.url = `${path}index.html${suffix}`
+    if (path.slice(-1) === '/' && STATIC_PAGE.test(path.slice(0, -1))) req.url = `${path}index.html${suffix}`
     next()
   }
   return {

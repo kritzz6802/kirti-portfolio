@@ -1,0 +1,218 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <meta name="theme-color" content="#0e1a3a" />
+    <title>Wedding Invitation</title>
+    <meta name="description" content="Kirti &amp; Dharmil — you are invited. Open the palace doors." />
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ccircle cx='16' cy='16' r='14' fill='%230a1230'/%3E%3Ccircle cx='16' cy='16' r='11' fill='none' stroke='%23d4ae58' stroke-width='1.5'/%3E%3C/svg%3E" />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600&family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400;1,500&family=Great+Vibes&family=Noto+Serif+Devanagari:wght@500;600&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+
+  <body>
+    <div class="backdrop" aria-hidden="true"></div>
+
+    <main class="stage is-sealed" id="stage" aria-label="Wedding invitation">
+      <div class="scroller" id="scroller" tabindex="-1">
+        <!-- ============================================================ HERO CARD -->
+        <section class="hero" id="hero" aria-labelledby="hero-names">
+          <div class="card" id="card">
+            <svg class="card__watermark" viewBox="-200 -200 400 400" aria-hidden="true" data-art="watermark"></svg>
+            <div class="card__frame" aria-hidden="true"><span></span></div>
+            <svg class="card__corner card__corner--tl" viewBox="0 0 74 74" aria-hidden="true" data-art="corner"></svg>
+            <svg class="card__corner card__corner--tr" viewBox="0 0 74 74" aria-hidden="true" data-art="corner"></svg>
+            <svg class="card__corner card__corner--bl" viewBox="0 0 74 74" aria-hidden="true" data-art="corner"></svg>
+            <svg class="card__corner card__corner--br" viewBox="0 0 74 74" aria-hidden="true" data-art="corner"></svg>
+            <svg class="card__flowers card__flowers--tr" viewBox="0 0 300 300" aria-hidden="true" data-art="cluster" data-seed="31" data-flip="x"></svg>
+            <svg class="card__flowers card__flowers--bl" viewBox="0 0 300 300" aria-hidden="true" data-art="cluster" data-seed="32" data-flip="y"></svg>
+
+            <div class="card__body">
+              <svg class="ganesha" viewBox="0 0 100 110" aria-hidden="true" data-art="ganesha"></svg>
+              <p class="shloka" lang="sa">॥ <span data-field="blessing"></span> ॥</p>
+
+              <p class="caps card__opening" data-field="openingMessage"></p>
+
+              <h1 class="names" id="hero-names">
+                <span class="names__first foil" data-field="firstName" data-split></span>
+                <span class="names__last caps" data-field="firstSurname"></span>
+                <span class="names__amp foil">&amp;</span>
+                <span class="names__first foil" data-field="secondName" data-split></span>
+                <span class="names__last caps" data-field="secondSurname"></span>
+              </h1>
+
+              <p class="card__invite" data-field="inviteLine"></p>
+
+              <div class="dateline" aria-label="Wedding date">
+                <span class="dateline__side caps" data-field="weekdayName"></span>
+                <span class="dateline__day" data-field="dayNumber"></span>
+                <span class="dateline__side caps"><span data-field="monthName"></span><br /><span data-field="yearNumber"></span></span>
+              </div>
+              <p class="caps card__time">at <span data-field="timeLabel"></span></p>
+
+              <svg class="divider-slot" viewBox="0 0 240 24" aria-hidden="true" data-art="divider"></svg>
+              <p class="card__venue" data-field="venue"></p>
+              <p class="caps card__city" data-field="city"></p>
+            </div>
+
+            <div class="sparkles" aria-hidden="true"></div>
+            <div class="scroll-cue" aria-hidden="true"><span></span></div>
+          </div>
+
+          <!-- ======================================================== PALACE DOORS (opening) -->
+          <div class="palace" id="palace">
+            <div class="palace__inner">
+              <div class="palace__light" aria-hidden="true"></div>
+              <div class="doors" aria-hidden="true">
+                <div class="door door--left"><svg viewBox="0 0 300 1150" preserveAspectRatio="none"><use href="#door-art" /></svg></div>
+                <div class="door door--right"><svg viewBox="300 0 300 1150" preserveAspectRatio="none"><use href="#door-art" /></svg></div>
+                <div class="doors__seam" aria-hidden="true"></div>
+              </div>
+              <svg class="facade" viewBox="0 0 900 1600" aria-hidden="true" data-art="facade"></svg>
+              <div class="dust" aria-hidden="true"></div>
+              <button class="palace__open" id="open-btn" type="button">
+                <span class="palace__ring" aria-hidden="true"></span>
+                <span class="sr-only">Open the doors</span>
+              </button>
+              <p class="palace__hint" aria-hidden="true">
+                <span class="caps">Tap the seal to open</span>
+              </p>
+            </div>
+            <div class="flash" aria-hidden="true"></div>
+          </div>
+          <!-- ======================================================== DK MONOGRAM INTRO -->
+          <div class="intro" id="intro">
+            <div class="intro__dust" aria-hidden="true"></div>
+            <div class="intro__glow" aria-hidden="true"></div>
+            <div class="intro__badge" aria-hidden="true">
+              <svg class="intro__mono" viewBox="-115 -115 230 230" data-art="monogram"></svg>
+            </div>
+            <div class="intro__text">
+              <p class="intro__names foil" data-field="introNames"></p>
+              <p class="caps intro__sub" data-field="introLine"></p>
+            </div>
+          </div>
+          <div class="burst" aria-hidden="true"></div>
+        </section>
+
+        <!-- ============================================================ FAMILIES -->
+        <section class="block families" id="families" aria-labelledby="families-title">
+          <svg class="block__mandala" viewBox="-200 -200 400 400" aria-hidden="true" data-art="watermark"></svg>
+          <p class="caps eyebrow reveal" data-field="familiesEyebrow"></p>
+          <h2 class="title reveal" style="--d: 1" id="families-title">With Love &amp; Blessings</h2>
+          <svg class="divider-slot reveal" style="--d: 2" viewBox="0 0 240 24" aria-hidden="true" data-art="divider"></svg>
+          <p class="lede reveal" style="--d: 3" data-field="familiesMessage"></p>
+          <div class="families__grid" data-list="families"></div>
+        </section>
+
+        <!-- ============================================================ COUNTDOWN -->
+        <section class="block countdown" id="countdown" aria-labelledby="countdown-title">
+          <h2 class="title reveal" id="countdown-title">Counting the Days</h2>
+          <p class="caps eyebrow reveal" style="--d: 1">Until <span data-field="dateLong"></span></p>
+          <div class="countdown__arch reveal reveal--zoom" style="--d: 2">
+            <svg class="countdown__mandala" viewBox="-200 -200 400 400" aria-hidden="true" data-art="mandala"></svg>
+            <dl class="countdown__units">
+              <div class="unit"><dd data-count="days">0</dd><dt>Days</dt></div>
+              <div class="unit"><dd data-count="hours">0</dd><dt>Hours</dt></div>
+              <div class="unit"><dd data-count="minutes">0</dd><dt>Minutes</dt></div>
+              <div class="unit"><dd data-count="seconds">0</dd><dt>Seconds</dt></div>
+            </dl>
+          </div>
+        </section>
+
+        <!-- ============================================================ FUNCTIONS -->
+        <section class="block events" id="events" aria-labelledby="events-title">
+          <svg class="garland-top" viewBox="0 0 900 150" preserveAspectRatio="xMidYMin slice" aria-hidden="true" data-art="garland"></svg>
+          <h2 class="title reveal" id="events-title">Wedding Celebrations</h2>
+          <svg class="divider-slot reveal" style="--d: 1" viewBox="0 0 240 24" aria-hidden="true" data-art="divider"></svg>
+          <div class="events__list" data-list="functions"></div>
+        </section>
+
+        <!-- ============================================================ VENUE -->
+        <section class="block venue" id="venue" aria-labelledby="venue-title">
+          <h2 class="title reveal" id="venue-title">The Venue</h2>
+          <svg class="divider-slot reveal" style="--d: 1" viewBox="0 0 240 24" aria-hidden="true" data-art="divider"></svg>
+          <div class="venue__arch reveal reveal--rise" style="--d: 2">
+            <svg class="venue__frame" viewBox="0 0 300 400" aria-hidden="true" data-art="arch"></svg>
+            <div class="venue__text">
+              <p class="venue__name" data-field="venue"></p>
+              <p class="caps" data-field="city"></p>
+              <p class="venue__address" data-field="address"></p>
+            </div>
+          </div>
+          <a class="btn reveal" style="--d: 3" data-href="mapUrl" target="_blank" rel="noopener">View on Map</a>
+        </section>
+
+        <!-- ============================================================ OUR STORY -->
+        <section class="block story" id="story" aria-labelledby="story-title" data-optional="story">
+          <svg class="story__flowers" viewBox="0 0 300 300" aria-hidden="true" data-art="cluster" data-seed="41"></svg>
+          <h2 class="title reveal" id="story-title">Our Story</h2>
+          <svg class="divider-slot reveal" style="--d: 1" viewBox="0 0 240 24" aria-hidden="true" data-art="divider"></svg>
+          <div class="story__body" data-list="story"></div>
+          <p class="signature reveal" style="--d: 6"><span data-field="firstName"></span> &amp; <span data-field="secondName"></span></p>
+        </section>
+
+        <!-- ============================================================ STAY -->
+        <section class="block stay" id="stay" aria-labelledby="stay-title" data-optional="hotels">
+          <h2 class="title reveal" id="stay-title">Where to Stay</h2>
+          <svg class="divider-slot reveal" style="--d: 1" viewBox="0 0 240 24" aria-hidden="true" data-art="divider"></svg>
+          <div class="stay__list" data-list="hotels"></div>
+        </section>
+
+        <!-- ============================================================ GIFT -->
+        <section class="block gift" id="gift" aria-labelledby="gift-title" data-optional="giftText">
+          <h2 class="title reveal" id="gift-title">Blessings &amp; Gifts</h2>
+          <svg class="divider-slot reveal" style="--d: 1" viewBox="0 0 240 24" aria-hidden="true" data-art="divider"></svg>
+          <div class="gift__ring reveal reveal--zoom" style="--d: 2">
+            <svg class="gift__wreath" viewBox="-160 -160 320 320" aria-hidden="true" data-art="wreath"></svg>
+            <p data-field="giftText"></p>
+          </div>
+          <a class="btn reveal" style="--d: 3" data-href="giftUrl" target="_blank" rel="noopener" data-field="giftButton"></a>
+        </section>
+
+        <!-- ============================================================ RSVP (final frame) -->
+        <section class="block rsvp" id="rsvp" aria-labelledby="rsvp-title">
+          <div class="monogram monogram--crest reveal reveal--zoom">
+            <svg viewBox="-115 -115 230 230" aria-hidden="true" data-art="monogram"></svg>
+          </div>
+          <h2 class="title reveal" style="--d: 1" id="rsvp-title">Kindly Reply</h2>
+          <p class="caps eyebrow reveal" style="--d: 2">By <span data-field="rsvpBy"></span></p>
+          <a class="btn reveal" style="--d: 3" data-href="rsvpUrl" target="_blank" rel="noopener">RSVP on WhatsApp</a>
+          <div class="contacts reveal" style="--d: 4" data-list="contacts"></div>
+          <p class="closing reveal" style="--d: 5" data-field="closingMessage"></p>
+          <p class="caps rsvp__names reveal" style="--d: 6"><span data-field="firstName"></span> &amp; <span data-field="secondName"></span></p>
+          <svg class="rsvp__diyas" viewBox="0 0 900 200" aria-hidden="true" data-art="diyas"></svg>
+        </section>
+      </div>
+
+      <!-- ============================================================ CONTROLS -->
+      <div class="controls" aria-label="Playback">
+        <button class="ctl ctl--sound" id="sound-btn" type="button" aria-pressed="false" hidden>
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path class="ctl__speaker" d="M4 9h4l5-4v14l-5-4H4z" />
+            <path class="ctl__waves" d="M16 8.5a5 5 0 0 1 0 7M18.5 6a8.5 8.5 0 0 1 0 12" />
+            <path class="ctl__mute" d="M16 9l6 6M22 9l-6 6" />
+          </svg>
+          <span class="sr-only">Sound</span>
+        </button>
+        <button class="ctl ctl--replay" id="replay-btn" type="button" hidden>
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12a8 8 0 1 0 2.4-5.7M4 4v4.5h4.5" /></svg>
+          <span class="sr-only">Replay invitation</span>
+        </button>
+      </div>
+    </main>
+
+    <!-- Shared gradients, flowers and the door artwork; filled in by art.js -->
+    <svg class="sprite" aria-hidden="true" focusable="false"><defs id="art-defs"></defs></svg>
+
+    <script src="art.js" defer></script>
+    <script src="script.js" defer></script>
+  </body>
+</html>
