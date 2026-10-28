@@ -6,6 +6,20 @@
 
 const INVITATIONS = [
   {
+    route: '../invitation14/',
+    name: 'The Pop-up Card',
+    tag: '3D paper',
+    text: 'A laser-cut card that opens and pops up in real 3D paper layers — palace, elephants, mandap, henna hands — a new pop-up page for every celebration. Tilt to see the depth.',
+    colours: ['#fffaf2', '#f4acb7', '#c9a24b'],
+  },
+  {
+    route: '../invitation15/',
+    name: 'The Acrylic Card',
+    tag: 'Acrylic',
+    text: 'A clear acrylic card with liquid-gold foil and pressed flowers that you can turn in your hand and flip; the celebrations are tinted acrylic tiles.',
+    colours: ['#121212', '#e6c27a', '#f2b5c0'],
+  },
+  {
     route: '../invitation13/',
     name: 'A Reel of Forever',
     tag: 'Photo film',

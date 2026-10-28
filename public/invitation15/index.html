@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <meta name="theme-color" content="#121212" />
+    <title>Kirti &amp; Dharmil — the acrylic invitation</title>
+    <meta name="description" content="A luxury acrylic wedding invitation — turn it in your hand." />
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%23121212'/%3E%3Crect x='8' y='5' width='16' height='22' rx='2' fill='none' stroke='%23e6c27a'/%3E%3C/svg%3E" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400;1,6..96,400&family=Allura&family=Jost:wght@300;400;500&family=Noto+Serif+Devanagari:wght@400&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+
+  <body>
+    <main class="stage" id="stage" aria-label="A luxury acrylic wedding invitation">
+      <span class="spot" aria-hidden="true"></span>
+      <div class="bokeh" aria-hidden="true"></div>
+
+      <!-- ============================================================ VIEW 1: the main card -->
+      <section class="view view--hero" data-view="hero" aria-label="The invitation">
+        <div class="holder" id="holder">
+          <div class="acrylic" id="card">
+            <div class="slab" aria-hidden="true"></div>
+            <div class="face face--front">
+              <svg class="pressed" viewBox="0 0 200 280" aria-hidden="true" data-art="flowers"></svg>
+              <p class="f-bless" lang="sa" data-field="shloka"></p>
+              <p class="f-pre">Together with their families</p>
+              <h1 class="f-names"><span data-field="first"></span><em>&amp;</em><span data-field="second"></span></h1>
+              <p class="f-line" data-field="inviteLine"></p>
+              <p class="f-date"><span data-field="day"></span><i></i><span data-field="month"></span><i></i><span data-field="year"></span></p>
+              <p class="f-small" data-field="whereShort"></p>
+              <span class="glare" aria-hidden="true"></span>
+            </div>
+            <div class="face face--back">
+              <svg class="pressed pressed--back" viewBox="0 0 200 280" aria-hidden="true" data-art="flowers2"></svg>
+              <p class="f-pre">The details</p>
+              <p class="b-big" data-field="dateFull"></p>
+              <p class="b-time" data-field="timeLabel"></p>
+              <span class="rule" aria-hidden="true"></span>
+              <p class="b-venue" data-field="venue"></p>
+              <p class="f-small" data-field="address"></p>
+              <span class="rule" aria-hidden="true"></span>
+              <div class="b-fams" data-list="families"></div>
+              <span class="glare" aria-hidden="true"></span>
+            </div>
+          </div>
+          <span class="shadow" aria-hidden="true"></span>
+        </div>
+        <p class="drag-hint" aria-hidden="true">drag to turn the card · tap to flip</p>
+      </section>
+
+      <!-- ============================================================ VIEW 2: the celebrations deck -->
+      <section class="view view--events" data-view="events" aria-labelledby="ev-title">
+        <h2 class="v-title" id="ev-title">The Celebrations</h2>
+        <p class="v-sub">tap a card</p>
+        <div class="deck" id="deck"></div>
+        <div class="focus" id="focus" aria-live="polite"></div>
+      </section>
+
+      <!-- ============================================================ VIEW 3: rsvp -->
+      <section class="view view--rsvp" data-view="rsvp" aria-labelledby="rsvp-title">
+        <div class="acrylic acrylic--rsvp">
+          <div class="slab" aria-hidden="true"></div>
+          <div class="face face--front">
+            <h2 class="v-title" id="rsvp-title">Kindly Reply</h2>
+            <p class="f-small">by <span data-field="rsvpByLong"></span></p>
+            <dl class="count"><div><dd data-c="days">0</dd><dt>days</dt></div><div><dd data-c="hours">0</dd><dt>hrs</dt></div><div><dd data-c="minutes">0</dd><dt>min</dt></div><div><dd data-c="seconds">0</dd><dt>sec</dt></div></dl>
+            <div class="btns">
+              <a class="btn" data-href="rsvpHref" target="_blank" rel="noopener">RSVP on WhatsApp</a>
+              <a class="btn btn--ghost" data-href="calHref" target="_blank" rel="noopener">Save the date</a>
+              <a class="btn btn--ghost" data-href="mapHref" target="_blank" rel="noopener">Directions</a>
+            </div>
+            <div class="f-small contacts" data-list="contacts"></div>
+            <p class="closing" data-field="closingMessage"></p>
+            <span class="glare" aria-hidden="true"></span>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============================================================ UNVEIL -->
+      <section class="unveil" id="unveil">
+        <p class="u-pre">You are invited</p>
+        <p class="u-names" data-field="pair"></p>
+        <button class="u-btn" id="open-btn" type="button">Unveil the invitation</button>
+      </section>
+
+      <!-- chrome -->
+      <div class="topbtns">
+        <button class="ic" id="sound-btn" type="button" aria-pressed="false" hidden><svg viewBox="0 0 24 24" aria-hidden="true"><path class="i-speaker" d="M4 9h4l5-4v14l-5-4H4z" /><path class="i-waves" d="M16 8.5a5 5 0 0 1 0 7M18.5 6a8.5 8.5 0 0 1 0 12" /><path class="i-mute" d="M16 9l6 6M22 9l-6 6" /></svg><span class="sr-only">Sound</span></button>
+        <button class="ic" id="flip-btn" type="button"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9a8 8 0 0 1 14-3l2 2M20 15a8 8 0 0 1-14 3l-2-2" /><path d="M20 4v4h-4M4 20v-4h4" /></svg><span class="sr-only">Flip the card</span></button>
+      </div>
+      <nav class="tabs" aria-label="Sections">
+        <button type="button" data-go="hero" class="is-on">Invitation</button>
+        <button type="button" data-go="events">Celebrations</button>
+        <button type="button" data-go="rsvp">RSVP</button>
+      </nav>
+    </main>
+
+    <script src="core.js" defer></script>
+    <script src="script.js" defer></script>
+  </body>
+</html>
