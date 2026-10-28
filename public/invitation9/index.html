@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <meta name="theme-color" content="#e85d75" />
+    <title>Kirti &amp; Dharmil 💍 — you have a new message</title>
+    <meta name="description" content="You have a new message from Kirti & Dharmil 💌" />
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='9' fill='%23e85d75'/%3E%3Cpath d='M16 24s-7-4.5-7-9.5A4 4 0 0 1 16 12a4 4 0 0 1 7 2.5C23 19.5 16 24 16 24z' fill='%23fff'/%3E%3C/svg%3E" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&family=Pacifico&family=Noto+Serif+Devanagari:wght@500&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+
+  <body>
+    <main class="stage" id="stage" aria-label="A chat invitation">
+      <!-- ============================================================ CHAT -->
+      <section class="chat" id="chat" aria-label="Chat with Kirti and Dharmil">
+        <header class="bar">
+          <span class="bar__avatar" aria-hidden="true" data-field="mono"></span>
+          <span class="bar__who"><b data-field="groupName"></b><small id="status">online</small></span>
+          <button class="bar__btn" id="skip-btn" type="button">Skip ⏭</button>
+          <button class="bar__btn bar__icon" id="sound-btn" type="button" aria-pressed="false" hidden>
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path class="i-speaker" d="M4 9h4l5-4v14l-5-4H4z" /><path class="i-waves" d="M16 8.5a5 5 0 0 1 0 7M18.5 6a8.5 8.5 0 0 1 0 12" /><path class="i-mute" d="M16 9l6 6M22 9l-6 6" /></svg>
+            <span class="sr-only">Music</span>
+          </button>
+          <button class="bar__btn bar__icon" id="replay-btn" type="button" hidden>
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12a8 8 0 1 0 2.4-5.7M4 4v4.5h4.5" /></svg>
+            <span class="sr-only">Replay the chat</span>
+          </button>
+        </header>
+
+        <div class="thread" id="thread" role="log" aria-live="polite" tabindex="0">
+          <p class="daychip">Today</p>
+          <p class="sys sys--lock">🔒 Messages are sealed with love</p>
+        </div>
+
+        <form class="composer" id="composer" autocomplete="off">
+          <label class="sr-only" for="msg">Send your blessings</label>
+          <input id="msg" type="text" placeholder="Send your blessings…" maxlength="120" />
+          <button type="submit" aria-label="Send"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 11.5 21 3l-8.5 18-2-7.5z" /></svg></button>
+        </form>
+        <div class="fx" id="fx" aria-hidden="true"></div>
+      </section>
+
+      <!-- ============================================================ LOCK SCREEN -->
+      <section class="lock" id="lock" aria-label="Lock screen">
+        <span class="lock__mono" aria-hidden="true" data-field="mono"></span>
+        <p class="lock__date" id="lock-date"></p>
+        <p class="lock__time" id="lock-time"></p>
+        <button class="notif" id="open-btn" type="button">
+          <span class="notif__app" aria-hidden="true">♥</span>
+          <span class="notif__body">
+            <span class="notif__head"><b>LoveChat</b><small>now</small></span>
+            <b class="notif__title" data-field="groupName"></b>
+            <span class="notif__text">You’re invited! Tap to open 💌</span>
+          </span>
+        </button>
+        <p class="lock__hint">tap the message to open</p>
+        <span class="lock__homebar" aria-hidden="true"></span>
+      </section>
+    </main>
+
+    <script src="core.js" defer></script>
+    <script src="script.js" defer></script>
+  </body>
+</html>

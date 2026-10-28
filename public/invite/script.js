@@ -6,6 +6,34 @@
 
 const INVITATIONS = [
   {
+    route: '../invitation8/',
+    name: 'Now Playing',
+    tag: 'Vinyl',
+    text: 'The wedding as an album — the record slides out onto a turntable and spins; tracklist, karaoke lyrics, liner-note credits.',
+    colours: ['#f3ead9', '#7b1e2b', '#e9b949'],
+  },
+  {
+    route: '../invitation9/',
+    name: 'The Chat',
+    tag: 'Chat',
+    text: 'A lock-screen notification opens a live group chat — typing dots, a scratch-to-reveal date, a voice note and a “Will you come?” poll.',
+    colours: ['#fdf1ef', '#e85d75', '#4b7bec'],
+  },
+  {
+    route: '../invitation10/',
+    name: 'Kai Po Che!',
+    tag: 'Kites',
+    text: 'An Uttarayan kite unfolds into the card; scrolling turns morning into a starry night where you release a tukkal lantern.',
+    colours: ['#7fc4e8', '#ff5d73', '#ffd166'],
+  },
+  {
+    route: '../invitation11/',
+    name: 'Coming Soon',
+    tag: 'Premiere',
+    text: 'A Bollywood premiere — curtains part, a film-leader countdown, poster, cast, showtimes, a marquee and book-your-seat RSVP.',
+    colours: ['#120a0c', '#8e1424', '#f2c14e'],
+  },
+  {
     route: '../invitation6/',
     name: 'Written in the Stars',
     tag: 'Stories',

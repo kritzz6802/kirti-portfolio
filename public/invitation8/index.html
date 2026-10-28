@@ -1,0 +1,148 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <meta name="theme-color" content="#f3ead9" />
+    <title>Now Playing — Kirti &amp; Dharmil · The Wedding Album</title>
+    <meta name="description" content="The Wedding Album — press play." />
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ccircle cx='16' cy='16' r='15' fill='%23141414'/%3E%3Ccircle cx='16' cy='16' r='6' fill='%23e9b949'/%3E%3Ccircle cx='16' cy='16' r='1.5' fill='%23141414'/%3E%3C/svg%3E" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Shrikhand&family=DM+Serif+Display:ital@0;1&family=Space+Mono:wght@400;700&family=Jost:wght@400;500;600&family=Noto+Serif+Devanagari:wght@500&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+
+  <body>
+    <main class="stage is-sealed" id="stage" aria-label="The Wedding Album — an invitation">
+      <div class="scroller" id="scroller" tabindex="-1">
+        <!-- ============================================================ THE DECK -->
+        <section class="deck" aria-label="Now playing">
+          <p class="deck__top"><span>Now playing</span><span>from <i>The Wedding Album</i></span></p>
+
+          <div class="turntable" aria-hidden="true">
+            <div class="plinth">
+              <span class="platter"></span>
+              <span class="knob knob--a"></span><span class="knob knob--b"></span>
+              <span class="led"></span>
+              <span class="rpm">33 ⅓</span>
+            </div>
+          </div>
+
+          <div class="record" id="record" aria-hidden="true">
+            <div class="record__disc">
+              <svg class="record__label" viewBox="-60 -60 120 120"><defs><path id="ring" d="M0 -44 A44 44 0 1 1 -0.1 -44" /></defs>
+                <circle r="58" fill="#7b1e2b" /><circle r="56" fill="none" stroke="#e9b949" stroke-width="1.2" />
+                <text class="record__ring"><textPath href="#ring" startOffset="0" data-field="ringText"></textPath></text>
+                <text class="record__mono" y="9" text-anchor="middle" data-field="mono"></text>
+                <text class="record__side" y="30" text-anchor="middle">SIDE A · 33⅓</text>
+                <circle r="3.2" fill="#141414" /></svg>
+            </div>
+            <span class="record__sheen"></span>
+          </div>
+
+          <svg class="tonearm" viewBox="0 0 100 300" aria-hidden="true">
+            <circle cx="70" cy="30" r="22" fill="#d9cfbd" stroke="#8a7d68" stroke-width="2" />
+            <circle cx="70" cy="30" r="9" fill="#8a7d68" />
+            <path d="M70 30 L70 210 Q70 236 50 250" stroke="#cfc4b0" stroke-width="7" fill="none" stroke-linecap="round" />
+            <path d="M70 30 L70 210 Q70 236 50 250" stroke="#fff" stroke-width="2" fill="none" stroke-linecap="round" opacity=".6" />
+            <rect x="34" y="244" width="26" height="34" rx="4" fill="#2b2b2b" transform="rotate(30 47 261)" />
+          </svg>
+
+          <!-- the album sleeve: the cover you open, later the thumbnail in the player -->
+          <div class="sleeve" id="sleeve">
+            <svg class="sleeve__art" viewBox="0 0 300 300" aria-hidden="true" data-art="cover"></svg>
+            <p class="sleeve__kicker">The Wedding Album</p>
+            <h1 class="sleeve__title"><span data-field="firstName"></span><em>&amp;</em><span data-field="secondName"></span></h1>
+            <p class="sleeve__label" data-field="labelLine"></p>
+            <span class="sleeve__badge">feat.<br />both<br />families</span>
+            <span class="advisory">FAMILY<br />ADVISORY<small>contains extreme love</small></span>
+          </div>
+
+          <button class="playbig" id="open-btn" type="button"><span class="playbig__ring" aria-hidden="true"></span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5 L19 12 L8 19Z" /></svg><span>Tap to play</span></button>
+
+          <!-- the player that appears once the record spins -->
+          <div class="player" id="player">
+            <div class="player__meta">
+              <b data-field="trackTitle"></b>
+              <span data-field="artistLine"></span>
+            </div>
+            <button class="heart" id="heart" type="button" aria-label="Love this"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s-8-5.2-8-11a4.6 4.6 0 0 1 8-3 4.6 4.6 0 0 1 8 3c0 5.8-8 11-8 11z" /></svg></button>
+            <div class="progress"><i id="progress-fill"></i></div>
+            <p class="progress__times"><span>today</span><span id="remaining"></span></p>
+            <div class="controls">
+              <button class="ctl" id="to-top" type="button" aria-label="Back to the record"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 5v14M19 5 9 12l10 7z" /></svg></button>
+              <button class="ctl ctl--play" id="sound-btn" type="button" aria-pressed="false" hidden aria-label="Play or pause the music">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path class="i-play" d="M8 5 L19 12 L8 19Z" /><path class="i-pause" d="M7 5h4v14H7zM13 5h4v14h-4z" /></svg>
+              </button>
+              <button class="ctl" id="to-tracks" type="button" aria-label="Skip to the tracklist"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18 5v14M5 5l10 7-10 7z" /></svg></button>
+            </div>
+            <p class="scrollhint">scroll for the tracklist ↓</p>
+          </div>
+        </section>
+
+        <!-- ============================================================ TRACKLIST -->
+        <section class="block tracks" id="tracks" aria-labelledby="tracks-title">
+          <p class="kicker reveal">The celebrations</p>
+          <h2 class="title reveal" id="tracks-title">Tracklist</h2>
+          <div class="sides" data-list="tracks"></div>
+        </section>
+
+        <!-- ============================================================ LYRICS -->
+        <section class="block lyrics" id="lyrics" aria-labelledby="lyrics-title">
+          <p class="kicker reveal">Our story</p>
+          <h2 class="title reveal" id="lyrics-title">Lyrics</h2>
+          <div class="lyrics__box reveal" data-list="lyrics"></div>
+        </section>
+
+        <!-- ============================================================ LINER NOTES -->
+        <section class="block credits" aria-labelledby="credits-title">
+          <p class="kicker reveal">Liner notes</p>
+          <h2 class="title reveal" id="credits-title">Credits</h2>
+          <div class="credits__sheet reveal">
+            <div class="credits__blessing"><span data-art-html="ganesha"></span><p class="shloka" lang="sa" data-field="shloka"></p></div>
+            <dl class="credits__list" data-list="credits"></dl>
+            <p class="credits__note" data-field="familiesMessage"></p>
+          </div>
+        </section>
+
+        <!-- ============================================================ LIVE AT -->
+        <section class="block live" aria-labelledby="live-title">
+          <div class="ticket reveal">
+            <div class="ticket__main">
+              <p class="kicker">Live at</p>
+              <h2 class="ticket__venue" id="live-title" data-field="venue"></h2>
+              <p class="ticket__city" data-field="city"></p>
+              <p class="ticket__addr" data-field="address"></p>
+              <p class="ticket__when"><span data-field="dateFull"></span> · <span data-field="timeLabel"></span></p>
+              <a class="btn" data-href="mapHref" target="_blank" rel="noopener">Get directions</a>
+            </div>
+            <div class="ticket__stub"><span>ADMIT</span><b>ALL</b><span>OUR LOVED ONES</span></div>
+          </div>
+        </section>
+
+        <!-- ============================================================ RSVP -->
+        <section class="block rsvp" aria-labelledby="rsvp-title">
+          <h2 class="title reveal" id="rsvp-title">Add to your queue</h2>
+          <p class="rsvp__by reveal">Kindly reply by <span data-field="rsvpByLong"></span></p>
+          <div class="rsvp__btns reveal">
+            <a class="btn" data-href="rsvpHref" target="_blank" rel="noopener">RSVP on WhatsApp</a>
+            <a class="btn btn--ghost" data-href="calHref" target="_blank" rel="noopener">Save to calendar</a>
+          </div>
+          <div class="contacts reveal" data-list="contacts"></div>
+          <p class="closing reveal" data-field="closingMessage"></p>
+          <p class="copyright reveal" data-field="copyright"></p>
+        </section>
+      </div>
+
+      <button class="replay" id="replay-btn" type="button" hidden aria-label="Put the record back in its sleeve and play again"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12a8 8 0 1 0 2.4-5.7M4 4v4.5h4.5" /></svg></button>
+      <div class="hearts" id="hearts" aria-hidden="true"></div>
+    </main>
+
+    <script src="core.js" defer></script>
+    <script src="script.js" defer></script>
+  </body>
+</html>

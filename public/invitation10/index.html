@@ -1,0 +1,135 @@
+<!doctype html>
+<html lang="gu">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <meta name="theme-color" content="#7fc4e8" />
+    <title>Kai Po Che! — Kirti &amp; Dharmil · શુભ લગ્ન</title>
+    <meta name="description" content="A kite-festival wedding invitation — tap the kite." />
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cpath d='M16 2L29 16L16 30L3 16Z' fill='%23ff5d73'/%3E%3Cpath d='M16 2L16 30M3 16H29' stroke='%23fff' stroke-width='1.5'/%3E%3C/svg%3E" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;700;800&family=Noto+Sans+Gujarati:wght@700;800&family=Kalam:wght@400;700&family=Noto+Serif+Devanagari:wght@500&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+
+  <body>
+    <main class="stage is-sealed" id="stage" aria-label="Kite festival wedding invitation">
+      <!-- the sky shifts from morning to dusk to night as you scroll -->
+      <div class="sky" aria-hidden="true">
+        <span class="sky__dusk"></span><span class="sky__night"></span>
+        <span class="sun"></span><span class="moon"></span>
+        <canvas class="stars" id="stars"></canvas>
+        <span class="cloud cloud--1"></span><span class="cloud cloud--2"></span><span class="cloud cloud--3"></span>
+        <div class="bgkites" id="bgkites"></div>
+      </div>
+
+      <div class="scroller" id="scroller" tabindex="-1">
+        <!-- ============================================================ HERO: the big kite -->
+        <section class="hero" aria-labelledby="hero-title">
+          <p class="hero__kpc" lang="gu">કાઈ પો છે!</p>
+          <h1 class="sr-only" id="hero-title">Kai Po Che — Kirti and Dharmil are getting married</h1>
+
+          <div class="kite" id="kite">
+            <svg class="kite__body" viewBox="-110 -140 220 280" aria-hidden="true" data-art="kite"></svg>
+            <!-- the kite's paper unfolds into the invitation -->
+            <div class="paper" id="paper">
+              <span data-art-html="ganesha"></span>
+              <p class="paper__shloka" lang="sa" data-field="shloka"></p>
+              <p class="paper__shubh" lang="gu">શુભ લગ્ન</p>
+              <p class="paper__names"><span data-field="firstName"></span><em>&amp;</em><span data-field="secondName"></span></p>
+              <p class="paper__line" data-field="inviteLine"></p>
+              <p class="paper__date"><span data-field="dayNumber"></span> <span data-field="monthName"></span> <span data-field="year"></span></p>
+            </div>
+          </div>
+          <svg class="string string--hero" viewBox="0 0 100 400" preserveAspectRatio="none" aria-hidden="true"><path d="M50 0 C80 120 20 260 60 400" /></svg>
+
+          <button class="tug" id="open-btn" type="button"><span class="tug__ring" aria-hidden="true"></span>Tap the kite</button>
+          <p class="scrollcue" aria-hidden="true">scroll — the day turns to night ↓</p>
+        </section>
+
+        <!-- ============================================================ CONTENT -->
+        <div class="flight">
+          <svg class="string string--long" id="longstring" viewBox="0 0 100 1000" preserveAspectRatio="none" aria-hidden="true">
+            <path id="longpath" pathLength="1" d="M50 0 C90 120 10 240 50 360 S90 600 40 720 S70 900 50 1000" />
+          </svg>
+
+          <section class="kcard kcard--wide reveal" style="--rot: -1.5deg" aria-labelledby="fam-title">
+            <span class="kcard__kite" aria-hidden="true" style="--c1:#ff5d73;--c2:#ffd166"></span>
+            <h2 class="kcard__title" id="fam-title">With the blessings of</h2>
+            <div class="fams" data-list="families"></div>
+            <p class="kcard__note" data-field="familiesMessage"></p>
+          </section>
+
+          <section class="kcard reveal kcard--right" style="--rot: 2.5deg" aria-labelledby="date-title">
+            <span class="kcard__kite" aria-hidden="true" style="--c1:#06d6a0;--c2:#118ab2"></span>
+            <h2 class="kcard__title" id="date-title">Save the date</h2>
+            <p class="bigdate"><b data-field="dayNumber"></b><span><span data-field="monthName"></span><br /><span data-field="year"></span></span></p>
+            <p class="kcard__note"><span data-field="weekdayName"></span> · <span data-field="timeLabel"></span></p>
+            <dl class="count"><div><dd data-c="days">0</dd><dt>days</dt></div><div><dd data-c="hours">0</dd><dt>hrs</dt></div><div><dd data-c="minutes">0</dd><dt>min</dt></div><div><dd data-c="seconds">0</dd><dt>sec</dt></div></dl>
+          </section>
+
+          <section class="events reveal" aria-labelledby="ev-title">
+            <h2 class="kcard__title kcard__title--sky" id="ev-title">The celebrations</h2>
+            <div class="patang" data-list="events"></div>
+          </section>
+
+          <section class="kcard reveal" style="--rot: -2deg" aria-labelledby="story-title" data-optional="story">
+            <span class="kcard__kite" aria-hidden="true" style="--c1:#9b5de5;--c2:#f15bb5"></span>
+            <h2 class="kcard__title" id="story-title">Our story</h2>
+            <div class="story" data-list="story"></div>
+          </section>
+
+          <section class="kcard reveal kcard--right" style="--rot: 2deg" aria-labelledby="venue-title">
+            <span class="kcard__kite" aria-hidden="true" style="--c1:#ff9f1c;--c2:#ff5d73"></span>
+            <h2 class="kcard__title" id="venue-title">The venue</h2>
+            <p class="venue__name" data-field="venue"></p>
+            <p class="kcard__note"><span data-field="address"></span>, <span data-field="city"></span></p>
+            <a class="btn" data-href="mapHref" target="_blank" rel="noopener">Open in Maps</a>
+          </section>
+
+          <!-- night: release a tukkal lantern -->
+          <section class="night reveal" aria-labelledby="rsvp-title">
+            <button class="tukkal" id="tukkal" type="button" aria-label="Release a tukkal lantern">
+              <svg viewBox="-40 -60 80 120" aria-hidden="true"><circle r="36" fill="url(#lglow)" /><path d="M-18 -22 Q0 -34 18 -22 L14 24 Q0 30 -14 24Z" fill="url(#lbody)" /><path d="M0 -10 C-5 -2 -5 6 0 10 C5 6 5 -2 0 -10Z" fill="#fff6c8" /><path d="M-14 24 V30 M14 24 V30" stroke="#ffd166" stroke-width="1.5" /></svg>
+            </button>
+            <p class="night__hint">Tap to release a tukkal with your blessing</p>
+            <h2 class="night__title" id="rsvp-title">Kindly reply</h2>
+            <p class="night__by">by <span data-field="rsvpByLong"></span></p>
+            <div class="night__btns">
+              <a class="btn btn--glow" data-href="rsvpHref" target="_blank" rel="noopener">RSVP on WhatsApp</a>
+              <a class="btn btn--ghost" data-href="calHref" target="_blank" rel="noopener">Save to calendar</a>
+            </div>
+            <div class="contacts" data-list="contacts"></div>
+            <p class="closing" data-field="closingMessage"></p>
+            <div class="sky-lanterns" id="sky-lanterns" aria-hidden="true"></div>
+          </section>
+
+          <svg class="rooftops" viewBox="0 0 600 160" preserveAspectRatio="xMidYMax slice" aria-hidden="true" data-art="rooftops"></svg>
+        </div>
+      </div>
+
+      <div class="tools">
+        <button class="tool" id="sound-btn" type="button" aria-pressed="false" hidden>
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path class="i-speaker" d="M4 9h4l5-4v14l-5-4H4z" /><path class="i-waves" d="M16 8.5a5 5 0 0 1 0 7M18.5 6a8.5 8.5 0 0 1 0 12" /><path class="i-mute" d="M16 9l6 6M22 9l-6 6" /></svg>
+          <span class="sr-only">Sound</span>
+        </button>
+        <button class="tool" id="replay-btn" type="button" hidden>
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12a8 8 0 1 0 2.4-5.7M4 4v4.5h4.5" /></svg>
+          <span class="sr-only">Fold the kite and play again</span>
+        </button>
+      </div>
+    </main>
+
+    <svg class="sr-only" aria-hidden="true"><defs>
+      <radialGradient id="lglow"><stop offset="0" stop-color="#ffe2a0" stop-opacity=".85" /><stop offset="1" stop-color="#ffb35a" stop-opacity="0" /></radialGradient>
+      <linearGradient id="lbody" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffe7a8" /><stop offset=".55" stop-color="#ffb35a" /><stop offset="1" stop-color="#ff7a45" /></linearGradient>
+    </defs></svg>
+
+    <script src="core.js" defer></script>
+    <script src="script.js" defer></script>
+  </body>
+</html>

@@ -1,0 +1,145 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <meta name="theme-color" content="#120a0c" />
+    <title>Coming Soon — Kirti &amp; Dharmil · A Love Story</title>
+    <meta name="description" content="A Koyani × Jarsaniya Production. Premiering soon — book your seat." />
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%23120a0c'/%3E%3Cpath d='M11 9L24 16L11 23Z' fill='%23f2c14e'/%3E%3C/svg%3E" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Yatra+One&family=Monoton&family=Oswald:wght@400;500;600&family=Cormorant+Garamond:ital,wght@1,500&family=Noto+Serif+Devanagari:wght@500&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+
+  <body>
+    <main class="stage is-sealed" id="stage" aria-label="Bollywood premiere wedding invitation">
+      <div class="scroller" id="scroller" tabindex="-1">
+        <!-- ============================================================ THE SCREEN -->
+        <section class="theatre" aria-label="The screening">
+          <div class="screen">
+            <div class="leader" aria-hidden="true">
+              <svg viewBox="-100 -100 200 200"><circle r="90" class="leader__ring" /><circle r="72" class="leader__ring" /><path d="M-100 0 H100 M0 -100 V100" class="leader__cross" /><path class="leader__sweep" d="M0 0 L0 -100 A100 100 0 0 1 0 -100 Z" /></svg>
+              <b id="leader-n">5</b>
+            </div>
+            <div class="titlecard">
+              <p class="titlecard__pre" data-field="production"></p>
+              <p class="titlecard__presents">presents</p>
+              <h1 class="titlecard__title"><span data-field="firstName"></span><em>weds</em><span data-field="secondName"></span></h1>
+              <p class="titlecard__tag">a love story · in theatres <span data-field="dateShort"></span></p>
+            </div>
+            <span class="grain" aria-hidden="true"></span>
+          </div>
+          <div class="beam" aria-hidden="true"></div>
+
+          <!-- velvet curtains + valance -->
+          <div class="curtain curtain--l" aria-hidden="true"></div>
+          <div class="curtain curtain--r" aria-hidden="true"></div>
+          <div class="valance" aria-hidden="true"></div>
+          <div class="marquee-top" aria-hidden="true"><span>NOW SHOWING</span></div>
+
+          <button class="ticketbtn" id="open-btn" type="button">
+            <span class="ticketbtn__stub">ADMIT ONE</span>
+            <span class="ticketbtn__main">Raise the curtain 🎬</span>
+          </button>
+          <div class="seats-row" aria-hidden="true"></div>
+          <p class="scrollcue" aria-hidden="true">scroll for the full feature ↓</p>
+        </section>
+
+        <!-- ============================================================ POSTER -->
+        <section class="poster reveal" aria-labelledby="poster-title">
+          <div class="poster__art">
+            <svg viewBox="0 0 300 400" aria-hidden="true" data-art="poster"></svg>
+            <p class="poster__top" data-field="production"></p>
+            <h2 class="poster__title" id="poster-title"><span data-field="firstName"></span><span class="poster__amp">&amp;</span><span data-field="secondName"></span></h2>
+            <p class="poster__tagline">Two families. One love story. A lifetime of masala.</p>
+            <p class="poster__date"><span data-field="dateShort"></span></p>
+            <p class="poster__billing" data-field="billing"></p>
+            <p class="poster__rating"><b>U/A</b> universally adorable · ★★★★★ <i>“Blockbuster!” — Everyone</i></p>
+          </div>
+        </section>
+
+        <!-- ============================================================ CAST -->
+        <section class="block cast" aria-labelledby="cast-title">
+          <h2 class="heading reveal" id="cast-title">The Cast</h2>
+          <div class="cast__blessing reveal"><span data-art-html="ganesha"></span><p class="shloka" lang="sa" data-field="shloka"></p><p>With the blessings of</p></div>
+          <div class="cast__grid" data-list="cast"></div>
+          <p class="cast__note reveal" data-field="familiesMessage"></p>
+        </section>
+
+        <!-- ============================================================ SHOWTIMES -->
+        <section class="block shows" aria-labelledby="shows-title">
+          <h2 class="heading reveal" id="shows-title">Showtimes</h2>
+          <p class="sub reveal">Every celebration, every screen</p>
+          <div class="shows__list" data-list="shows"></div>
+        </section>
+
+        <!-- ============================================================ TRAILER (story as subtitles) -->
+        <section class="block trailer" aria-labelledby="trailer-title">
+          <h2 class="heading reveal" id="trailer-title">The Trailer</h2>
+          <div class="trailer__screen reveal">
+            <span class="trailer__bars" aria-hidden="true"></span>
+            <p class="trailer__voice">In a world…</p>
+            <p class="subtitle" id="subtitle" aria-live="polite"></p>
+            <span class="trailer__bars trailer__bars--b" aria-hidden="true"></span>
+          </div>
+        </section>
+
+        <!-- ============================================================ MARQUEE (venue) -->
+        <section class="block venue" aria-labelledby="venue-title">
+          <h2 class="sr-only" id="venue-title">The venue</h2>
+          <div class="marquee reveal">
+            <span class="bulbs" aria-hidden="true"></span>
+            <p class="marquee__now">NOW PLAYING AT</p>
+            <div class="letterboard">
+              <p data-field="venueCaps"></p>
+              <p data-field="cityCaps"></p>
+              <p data-field="dateCaps"></p>
+            </div>
+            <span class="bulbs bulbs--b" aria-hidden="true"></span>
+          </div>
+          <p class="venue__addr reveal" data-field="address"></p>
+          <a class="btn reveal" data-href="mapHref" target="_blank" rel="noopener">Get directions</a>
+        </section>
+
+        <!-- ============================================================ BOOK YOUR SEAT (rsvp) -->
+        <section class="block book" aria-labelledby="book-title">
+          <h2 class="heading reveal" id="book-title">Book your seat</h2>
+          <p class="sub reveal">Pick a seat — the best ones are all yours 💛 · RSVP by <span data-field="rsvpByLong"></span></p>
+          <div class="screenline reveal" aria-hidden="true">SCREEN THIS WAY</div>
+          <div class="seatmap reveal" id="seatmap" role="group" aria-label="Seat map"></div>
+          <p class="seat__chosen" id="seat-chosen" aria-live="polite"></p>
+          <div class="book__btns reveal">
+            <a class="btn" data-href="rsvpHref" target="_blank" rel="noopener" id="rsvp-link">Confirm on WhatsApp</a>
+            <a class="btn btn--ghost" data-href="calHref" target="_blank" rel="noopener">Save to calendar</a>
+          </div>
+          <div class="contacts reveal" data-list="contacts"></div>
+        </section>
+
+        <!-- ============================================================ END CREDITS -->
+        <section class="credits" aria-labelledby="credits-title">
+          <h2 class="sr-only" id="credits-title">End credits</h2>
+          <div class="credits__roll" data-list="credits"></div>
+        </section>
+      </div>
+
+      <div class="tools">
+        <button class="tool" id="sound-btn" type="button" aria-pressed="false" hidden>
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path class="i-speaker" d="M4 9h4l5-4v14l-5-4H4z" /><path class="i-waves" d="M16 8.5a5 5 0 0 1 0 7M18.5 6a8.5 8.5 0 0 1 0 12" /><path class="i-mute" d="M16 9l6 6M22 9l-6 6" /></svg>
+          <span class="sr-only">Sound</span>
+        </button>
+        <button class="tool" id="replay-btn" type="button" hidden>
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12a8 8 0 1 0 2.4-5.7M4 4v4.5h4.5" /></svg>
+          <span class="sr-only">Close the curtains and play again</span>
+        </button>
+      </div>
+    </main>
+
+    <script src="core.js" defer></script>
+    <script src="script.js" defer></script>
+  </body>
+</html>
