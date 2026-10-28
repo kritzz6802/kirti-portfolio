@@ -6,6 +6,13 @@
 
 const INVITATIONS = [
   {
+    route: '../invitation12/',
+    name: 'Our Shaadi Story',
+    tag: 'Animated film',
+    text: 'An animated wedding film — Kirti & Dharmil meet, then every function plays as its own scene with the families: aarti, mehendi on a swing, haldi, sangeet, the pheras and the reception.',
+    colours: ['#ffcad4', '#c9184a', '#ffd166'],
+  },
+  {
     route: '../invitation8/',
     name: 'Now Playing',
     tag: 'Vinyl',
