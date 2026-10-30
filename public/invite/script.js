@@ -9,7 +9,7 @@ const INVITATIONS = [
     route: '../invitation16/',
     name: 'The Wedding Book',
     tag: '3D book',
-    text: 'A wine-and-gold card that opens like a real book — pages turn in 3D and each line of the invitation appears in turn: blessings, families, the date, every celebration and the RSVP.',
+    text: 'A wine-and-gold card that opens like a real book lying open — a horizontal two-page spread where pages turn in 3D and each line appears in turn: blessings, families, the date, every celebration and the RSVP.',
     colours: ['#6d1a2a', '#fffaf1', '#c9a24b'],
   },
   {

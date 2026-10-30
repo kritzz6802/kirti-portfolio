@@ -1,6 +1,7 @@
 /* =============================================================================
    The Wedding Book — wine linen cover, ivory cotton pages, gold foil, ink.
-   Sizes are in container units of the 9:16 stage.
+   The book lies open as a horizontal two-page spread. Chrome is sized in
+   container units of the stage; page type in units of the page itself.
    ========================================================================== */
 
 :root {
@@ -64,24 +65,27 @@ button {
   white-space: nowrap;
 }
 
+/* a landscape stage on larger screens; the whole screen on phones */
 .stage {
   --tx: 0deg;
   --ty: 0deg;
+  --bw: min(92cqw, 112cqh);
+  --bh: calc(var(--bw) * 0.66);
   position: relative;
-  height: min(calc(100dvh - 48px), 1920px);
-  aspect-ratio: 9 / 16;
+  width: min(calc(100vw - 48px), calc((100dvh - 48px) * 1.6), 1800px);
+  aspect-ratio: 16 / 10;
   border-radius: 24px;
   overflow: hidden;
   container-type: size;
   isolation: isolate;
   background:
-    radial-gradient(70% 45% at 50% 42%, #5a1a27 0%, #2a0f14 70%, #170509 100%);
+    radial-gradient(70% 60% at 50% 45%, #5a1a27 0%, #2a0f14 70%, #170509 100%);
   box-shadow:
     0 0 0 1px rgba(201, 162, 75, 0.35),
     0 30px 80px rgba(0, 0, 0, 0.55);
 }
 
-@media (max-width: 600px), (max-height: 520px) and (max-width: 900px) {
+@media (max-width: 900px), (max-height: 520px) {
   body {
     background: #2a0f14;
   }
@@ -98,12 +102,12 @@ button {
 .glow {
   position: absolute;
   left: 50%;
-  top: 44%;
-  width: 120cqw;
-  height: 120cqw;
-  margin: -60cqw 0 0 -60cqw;
+  top: 48%;
+  width: 130cqmin;
+  height: 130cqmin;
+  margin: -65cqmin 0 0 -65cqmin;
   border-radius: 50%;
-  background: radial-gradient(circle, rgba(236, 213, 154, 0.18), transparent 65%);
+  background: radial-gradient(circle, rgba(236, 213, 154, 0.16), transparent 65%);
   pointer-events: none;
 }
 
@@ -111,98 +115,99 @@ button {
 .scene {
   position: absolute;
   left: 50%;
-  top: 46%;
-  width: 76cqw;
-  height: 108cqw;
-  margin: -54cqw 0 0 -38cqw;
-  perspective: 220cqw;
-  perspective-origin: 30% 40%;
+  top: 48%;
+  width: var(--bw);
+  height: var(--bh);
+  transform: translate(-50%, -50%);
+  perspective: calc(var(--bw) * 2.6);
 }
 
+/* the book is the right half of the spread; leaves turn over its left edge (the spine) */
 .book {
   position: absolute;
-  inset: 0;
+  top: 0;
+  bottom: 0;
+  left: 50%;
+  width: 50%;
   transform-style: preserve-3d;
-  transform: rotateX(calc(10deg + var(--ty))) rotateY(calc(-22deg + var(--tx))) rotateZ(2deg);
+  transform: translateX(-50%) rotateX(calc(14deg + var(--ty))) rotateY(calc(-14deg + var(--tx))) rotateZ(2deg);
   transition: transform 1.4s var(--ease);
   cursor: pointer;
-  animation: float 6s ease-in-out infinite alternate;
-}
-
-@keyframes float {
-  to {
-    translate: 0 -1.6cqw;
-  }
 }
 
 .is-open .book {
-  transform: translateX(9cqw) rotateX(calc(6deg + var(--ty))) rotateY(calc(-6deg + var(--tx)));
+  transform: translateX(0) rotateX(calc(16deg + var(--ty))) rotateY(var(--tx));
 }
 
 .book__shadow {
   position: absolute;
-  left: 6%;
-  right: 0;
-  bottom: -7cqw;
-  height: 8cqw;
+  left: 30%;
+  right: 22%;
+  bottom: -4%;
+  height: 8%;
   border-radius: 50%;
-  background: radial-gradient(closest-side, rgba(0, 0, 0, 0.55), transparent);
+  background: radial-gradient(closest-side, rgba(0, 0, 0, 0.6), transparent);
   filter: blur(4px);
-  transition: transform 1.4s var(--ease);
+  transition:
+    left 1.4s var(--ease),
+    right 1.4s var(--ease);
 }
 
 .is-open .book__shadow {
-  transform: translateX(9cqw);
+  left: 2%;
+  right: 2%;
 }
 
-/* the back cover sits behind every page */
+/* the inside back cover: the last right-hand page */
 .book__back {
   position: absolute;
   inset: 0;
-  transform: translateZ(-1.6cqw);
-  border-radius: 0.6cqw 1.6cqw 1.6cqw 0.6cqw;
-  overflow: hidden;
+  transform: translateZ(-6px);
+  container-type: size;
 }
 
-/* the page block's edge, seen past the cover */
-.book__edge {
+/* the page block's edges, seen past the right-hand page */
+.book__pages {
   position: absolute;
-  top: 0.8cqw;
-  bottom: 0.8cqw;
-  right: -0.2cqw;
-  width: 1.6cqw;
-  transform-origin: 0 50%;
-  transform: translateX(100%) rotateY(90deg) translateX(-0.2cqw);
-  background: repeating-linear-gradient(90deg, #f3ead8 0 1px, #d9ccb2 1px 2px);
+  inset: 0;
+  transform: translateZ(-7px);
+  border-radius: 0 6px 6px 0;
+  background: #efe3cc;
+  box-shadow:
+    2px 2px 0 #e6d8bd,
+    4px 4px 0 #d9c9aa,
+    6px 6px 0 var(--wine-dark);
 }
 
 .leaf {
+  --a: 0deg;
   position: absolute;
   inset: 0;
   transform-origin: 0 50%;
   transform-style: preserve-3d;
+  transform: rotateY(var(--a)) translateZ(calc(var(--k) * -0.4px));
   transition: transform 1.2s var(--turn);
 }
 
 .leaf.is-turned {
-  transform: rotateY(-176deg);
+  --a: -180deg;
 }
 
-.leaf__front,
-.leaf__back {
+.face {
   position: absolute;
   inset: 0;
   overflow: hidden;
+  container-type: size;
   backface-visibility: hidden;
   -webkit-backface-visibility: hidden;
 }
 
-.leaf__back {
+.face--back {
   transform: rotateY(180deg);
 }
 
 /* a shadow sweeps across a page while it turns */
-.leaf__front::after {
+.face::after {
   content: '';
   position: absolute;
   inset: 0;
@@ -211,7 +216,7 @@ button {
   pointer-events: none;
 }
 
-.leaf.is-turning .leaf__front::after {
+.leaf.is-turning .face::after {
   animation: shade 1.2s var(--turn);
 }
 
@@ -230,32 +235,32 @@ button {
   align-items: center;
   justify-content: center;
   text-align: center;
-  border-radius: 0.6cqw 1.6cqw 1.6cqw 0.6cqw;
+  border-radius: 0.8cqw 2.1cqw 2.1cqw 0.8cqw;
   background:
     repeating-linear-gradient(0deg, rgba(255, 255, 255, 0.025) 0 1px, transparent 1px 3px),
     repeating-linear-gradient(90deg, rgba(0, 0, 0, 0.05) 0 1px, transparent 1px 3px),
     radial-gradient(90% 70% at 40% 35%, #8a2337, var(--wine) 55%, var(--wine-dark));
   box-shadow:
-    inset 2.6cqw 0 2cqw -2cqw rgba(0, 0, 0, 0.5),
-    inset 0 0 0 0.4cqw rgba(0, 0, 0, 0.15);
+    inset 3.4cqw 0 2.6cqw -2.6cqw rgba(0, 0, 0, 0.5),
+    inset 0 0 0 0.5cqw rgba(0, 0, 0, 0.15);
 }
 
 .cover__frame {
   position: absolute;
-  inset: 4cqw 4cqw 4cqw 6cqw;
+  inset: 5.2cqw 5.2cqw 5.2cqw 7.8cqw;
   border: 1px solid var(--gold);
-  box-shadow: inset 0 0 0 1.2cqw transparent, inset 0 0 0 calc(1.2cqw + 1px) rgba(201, 162, 75, 0.6);
+  box-shadow: inset 0 0 0 1.6cqw transparent, inset 0 0 0 calc(1.6cqw + 1px) rgba(201, 162, 75, 0.6);
 }
 
 .cover__mono {
   display: grid;
   place-items: center;
-  width: 22cqw;
-  height: 22cqw;
+  width: 28.6cqw;
+  height: 28.6cqw;
   border: 1px solid var(--gold);
   border-radius: 50%;
   font-family: var(--script);
-  font-size: 9cqw;
+  font-size: 11.7cqw;
   line-height: 1;
   background: var(--foil);
   background-size: 260% 100%;
@@ -273,18 +278,18 @@ button {
 }
 
 .cover__pre {
-  margin-top: 5cqw;
+  margin-top: 6.5cqw;
   font-family: var(--caps);
-  font-size: max(8px, 2.2cqw);
+  font-size: max(8px, 2.9cqw);
   letter-spacing: 0.4em;
   text-transform: uppercase;
   color: var(--gold-light);
 }
 
 .cover__names {
-  margin-top: 2cqw;
+  margin-top: 2.6cqw;
   font-family: var(--script);
-  font-size: 13cqw;
+  font-size: 16.9cqw;
   line-height: 0.95;
   background: var(--foil);
   background-size: 260% 100%;
@@ -300,9 +305,9 @@ button {
 }
 
 .cover__date {
-  margin-top: 4cqw;
+  margin-top: 5.2cqw;
   font-family: var(--caps);
-  font-size: max(9px, 2.5cqw);
+  font-size: max(9px, 3.2cqw);
   letter-spacing: 0.3em;
   text-transform: uppercase;
   color: var(--gold-light);
@@ -312,8 +317,8 @@ button {
   position: absolute;
   top: 0;
   bottom: 0;
-  right: 14cqw;
-  width: 3cqw;
+  right: 18.2cqw;
+  width: 3.9cqw;
   background: linear-gradient(90deg, #b8913f, #f1dfb4 50%, #a9853f);
   opacity: 0.85;
 }
@@ -338,18 +343,18 @@ button {
   display: flex;
   flex-direction: column;
   justify-content: center;
-  padding: 9cqw 9cqw 10cqw;
-  border-radius: 0.4cqw 1.2cqw 1.2cqw 0.4cqw;
+  padding: 11.7cqw 11.7cqw 13cqw;
+  border-radius: 0.5cqw 1.6cqw 1.6cqw 0.5cqw;
   background:
-    linear-gradient(90deg, rgba(120, 80, 50, 0.16), transparent 9%),
+    linear-gradient(var(--gutter, 90deg), rgba(120, 80, 50, 0.2), transparent 12%),
     repeating-radial-gradient(circle at 30% 20%, rgba(120, 90, 60, 0.018) 0 2px, transparent 2px 5px),
     radial-gradient(120% 80% at 60% 30%, #fffdf7, var(--paper) 60%, #f6ecda);
-  box-shadow: inset -0.4cqw 0 0 rgba(0, 0, 0, 0.04);
+  box-shadow: inset -0.5cqw 0 0 rgba(0, 0, 0, 0.04);
 }
 
 .paper__frame {
   position: absolute;
-  inset: 4cqw 4cqw 4cqw 5cqw;
+  inset: 5.2cqw 5.2cqw 5.2cqw 6.5cqw;
   border: 1px solid rgba(201, 162, 75, 0.7);
   pointer-events: none;
 }
@@ -357,17 +362,13 @@ button {
 .paper__frame::after {
   content: '';
   position: absolute;
-  inset: 1cqw;
+  inset: 1.3cqw;
   border: 1px solid rgba(201, 162, 75, 0.35);
 }
 
-.paper--back {
-  align-items: center;
-}
-
-.paper--back .orn {
-  width: 30cqw;
-  opacity: 0.5;
+.paper--left {
+  --gutter: 270deg;
+  border-radius: 1.6cqw 0.5cqw 0.5cqw 1.6cqw;
 }
 
 .paper__text {
@@ -382,10 +383,10 @@ button {
   position: absolute;
   left: 0;
   right: 0;
-  bottom: 5.6cqw;
+  bottom: 7.3cqw;
   text-align: center;
   font-family: var(--caps);
-  font-size: max(7px, 1.9cqw);
+  font-size: max(7px, 2.5cqw);
   letter-spacing: 0.3em;
   color: rgba(201, 162, 75, 0.9);
 }
@@ -397,13 +398,13 @@ button {
 
 .is-reading .ln {
   animation: ink 1s var(--ease) both;
-  animation-delay: calc(0.4s + var(--i) * 0.45s);
+  animation-delay: calc(0.4s + (var(--o, 0) + var(--i)) * 0.42s);
 }
 
 @keyframes ink {
   from {
     opacity: 0;
-    transform: translateY(2.4cqw);
+    transform: translateY(3.1cqw);
     filter: blur(5px);
     letter-spacing: 0.06em;
   }
@@ -417,13 +418,13 @@ button {
 /* script lines are written on from left to right */
 .ink {
   display: inline-block;
-  padding: 0 2cqw;
+  padding: 0 2.6cqw;
   clip-path: inset(0 100% 0 0);
 }
 
 .is-reading .ink {
   animation: write 1.6s cubic-bezier(0.45, 0.05, 0.35, 1) both;
-  animation-delay: calc(0.5s + var(--i) * 0.45s);
+  animation-delay: calc(0.5s + (var(--o, 0) + var(--i)) * 0.42s);
 }
 
 @keyframes write {
@@ -433,7 +434,7 @@ button {
 }
 
 .ln--ganesha .g {
-  width: 16cqw;
+  width: 20.8cqw;
   height: auto;
   fill: none;
   stroke: var(--gold);
@@ -458,16 +459,16 @@ button {
 }
 
 .ln--deva {
-  margin-top: 1.6cqw;
+  margin-top: 2.1cqw;
   font-family: var(--deva);
   font-weight: 500;
-  font-size: max(12px, 3.6cqw);
+  font-size: max(9px, 4.7cqw);
   color: var(--wine);
 }
 
 .ln--orn {
-  width: 34cqw;
-  margin: 2.4cqw 0;
+  width: 44.2cqw;
+  margin: 3.1cqw 0;
 }
 
 .orn {
@@ -485,76 +486,76 @@ button {
 }
 
 .ln--small {
-  margin-top: 1cqw;
+  margin-top: 1.3cqw;
   font-family: var(--caps);
-  font-size: max(8px, 2.2cqw);
+  font-size: max(8px, 2.9cqw);
   letter-spacing: 0.22em;
   text-transform: uppercase;
   color: var(--ink-soft);
 }
 
 .ln--caps {
-  margin-top: 1cqw;
+  margin-top: 1.3cqw;
   font-family: var(--caps);
-  font-size: max(11px, 3.4cqw);
+  font-size: max(9px, 4.4cqw);
   letter-spacing: 0.2em;
   text-transform: uppercase;
   color: var(--wine);
 }
 
 .ln--italic {
-  margin-top: 1.4cqw;
+  margin-top: 1.8cqw;
   font-style: italic;
-  font-size: max(13px, 4cqw);
+  font-size: max(9px, 5.2cqw);
   line-height: 1.35;
   color: var(--ink-soft);
 }
 
 .ln--body {
-  margin-top: 1.4cqw;
-  font-size: max(14px, 4.2cqw);
+  margin-top: 1.8cqw;
+  font-size: max(9px, 5.5cqw);
   font-weight: 500;
 }
 
 .ln--parent {
-  font-size: max(14px, 4.2cqw);
+  font-size: max(9px, 5.5cqw);
   font-weight: 500;
   line-height: 1.3;
 }
 
 .ln--name {
-  margin: 1cqw 0 -1cqw;
+  margin: 1.3cqw 0 -1.3cqw;
   font-family: var(--script);
-  font-size: 15cqw;
+  font-size: 19.5cqw;
   line-height: 1.1;
   color: var(--wine);
 }
 
 .ln--with {
   font-style: italic;
-  font-size: max(13px, 4cqw);
+  font-size: max(9px, 5.2cqw);
   color: var(--gold);
 }
 
 .ln--event {
-  margin-top: 1cqw;
+  margin-top: 1.3cqw;
   font-family: var(--script);
-  font-size: 12cqw;
+  font-size: 15.6cqw;
   line-height: 1.1;
   color: var(--wine);
 }
 
 .ln--sign {
-  margin-top: 2cqw;
+  margin-top: 2.6cqw;
   font-family: var(--script);
-  font-size: 9cqw;
+  font-size: 11.7cqw;
   line-height: 1.15;
   color: var(--wine);
 }
 
 .ln--bigdate {
   font-family: var(--caps);
-  font-size: 22cqw;
+  font-size: 28.6cqw;
   line-height: 1;
   background: var(--foil);
   background-size: 260% 100%;
@@ -565,35 +566,35 @@ button {
 
 .ln--venue {
   font-family: var(--caps);
-  font-size: max(13px, 4cqw);
+  font-size: max(9px, 5.2cqw);
   letter-spacing: 0.06em;
   color: var(--wine);
 }
 
 .count {
   display: flex;
-  gap: 2cqw;
-  margin: 4cqw 0 0;
+  gap: 2.6cqw;
+  margin: 5.2cqw 0 0;
 }
 
 .count div {
   display: flex;
   flex-direction: column-reverse;
-  min-width: 11cqw;
-  padding: 1.2cqw 0;
+  min-width: 14.3cqw;
+  padding: 1.6cqw 0;
   border: 1px solid rgba(201, 162, 75, 0.5);
 }
 
 .count dd {
   margin: 0;
   font-family: var(--caps);
-  font-size: max(13px, 4.4cqw);
+  font-size: max(9px, 5.7cqw);
   font-variant-numeric: tabular-nums;
 }
 
 .count dt {
   font-family: var(--caps);
-  font-size: max(7px, 1.8cqw);
+  font-size: max(7px, 2.3cqw);
   letter-spacing: 0.14em;
   text-transform: uppercase;
   color: var(--ink-soft);
@@ -603,14 +604,14 @@ button {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
-  gap: 2cqw;
-  margin-top: 1cqw;
+  gap: 2.6cqw;
+  margin-top: 1.3cqw;
 }
 
 .btn {
-  padding: 2.2cqw 3.6cqw;
+  padding: 2.9cqw 4.7cqw;
   font-family: var(--caps);
-  font-size: max(8px, 2.2cqw);
+  font-size: max(8px, 2.9cqw);
   letter-spacing: 0.16em;
   text-transform: uppercase;
   text-decoration: none;
@@ -634,10 +635,10 @@ button {
   position: absolute;
   left: 0;
   right: 0;
-  bottom: 13cqh;
+  bottom: 9cqh;
   text-align: center;
   font-family: var(--caps);
-  font-size: max(9px, 2.5cqw);
+  font-size: max(9px, 2.5cqmin);
   letter-spacing: 0.3em;
   text-transform: uppercase;
   color: var(--gold-light);
@@ -673,17 +674,17 @@ button {
 .topbtns {
   position: absolute;
   z-index: 20;
-  top: max(4cqw, env(safe-area-inset-top));
-  right: 4cqw;
+  top: max(4cqmin, env(safe-area-inset-top));
+  right: 4cqmin;
   display: flex;
-  gap: 2cqw;
+  gap: 2cqmin;
 }
 
 .ic {
   display: grid;
   place-items: center;
-  width: max(32px, 8.6cqw);
-  height: max(32px, 8.6cqw);
+  width: max(32px, 8.6cqmin);
+  height: max(32px, 8.6cqmin);
   padding: 0;
   border: 1px solid rgba(201, 162, 75, 0.6);
   border-radius: 50%;
@@ -728,18 +729,18 @@ button {
   position: absolute;
   z-index: 20;
   left: 50%;
-  bottom: max(4cqw, env(safe-area-inset-bottom));
+  bottom: max(4cqmin, env(safe-area-inset-bottom));
   display: flex;
   align-items: center;
-  gap: 3cqw;
+  gap: 3cqmin;
   transform: translateX(-50%);
 }
 
 .nav__count {
-  min-width: 16cqw;
+  min-width: 16cqmin;
   text-align: center;
   font-family: var(--caps);
-  font-size: max(10px, 2.8cqw);
+  font-size: max(10px, 2.8cqmin);
   letter-spacing: 0.16em;
   color: var(--gold-light);
 }
@@ -747,6 +748,40 @@ button {
 .is-last #next-btn {
   opacity: 0.3;
   pointer-events: none;
+}
+
+.turn-hint {
+  display: none;
+}
+
+/* a portrait phone shows the spread small: suggest turning it sideways */
+@media (orientation: portrait) and (max-width: 600px) {
+  .turn-hint {
+    display: block;
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 16cqh;
+    text-align: center;
+    font-family: var(--caps);
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--gold-light);
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  .is-started .turn-hint {
+    animation: hint-once 7s ease 1.5s both;
+  }
+}
+
+@keyframes hint-once {
+  10%,
+  80% {
+    opacity: 0.85;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {

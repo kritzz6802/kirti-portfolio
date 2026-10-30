@@ -13,15 +13,25 @@ invitation16/
 
 **How it plays**
 
-1. A closed wine-coloured book floats at an angle: gold "K & D" monogram, names and date. Tap it to open.
-2. The cover swings open in 3D, and the first page's lines appear **one by one**, like ink settling. Names and
-   titles are written on from left to right.
-3. Pages turn on their own after each one has been read; tap the right side, swipe, use ‹ › or the arrow keys
-   to turn yourself, and ❚❚ to stop the automatic turning.
+The stage is landscape: on a computer it is a wide card, and on a phone it fills the screen. Turned sideways, the
+phone shows the book at its biggest. Upright, the book is smaller, and a hint suggests turning the phone.
 
-**Pages:** Ganesha and the blessing, then the bride's parents inviting you to the wedding of Kirti with Dharmil
-(and his parents), then save the date with the countdown and venue. After that comes one page per celebration,
-then our story, and finally the RSVP with save-the-date and directions.
+1. A closed wine-coloured book floats at an angle: gold "K & D" monogram, names and date. Tap it to open.
+2. The cover swings open over the spine, and the book lies open as a **two-page spread**. The lines on the left
+   page, then the right page, appear **one by one** like ink settling. Names and titles are written on from left
+   to right.
+3. Spreads turn on their own once read. Tap the right page (or ›, a swipe, or the arrow key) to turn forward and
+   the left page to go back; ❚❚ stops the automatic turning.
+
+**Spreads:**
+
+| Left page | Right page |
+| --- | --- |
+| Ganesha and the blessing | "We joyfully invite you to the wedding of Kirti & Dharmil" |
+| Bride's parents invite you to the wedding of their daughter **Kirti** | with **Dharmil**, son of the groom's parents |
+| Save the date: weekday, the big "12", month and time | Venue, address and a live countdown |
+| One celebration per page, two to a spread | |
+| Our story | Kindly reply: RSVP, save-the-date, directions, contacts |
 
 ## Edit the content
 
