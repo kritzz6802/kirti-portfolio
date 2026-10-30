@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <meta name="theme-color" content="#2a0f14" />
+    <title>Kirti &amp; Dharmil — The Wedding Book</title>
+    <meta name="description" content="Open the card and read the invitation, page by page." />
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect x='4' y='2' width='24' height='28' rx='2' fill='%236d1a2a'/%3E%3Crect x='7' y='5' width='18' height='22' fill='none' stroke='%23e2c07a'/%3E%3C/svg%3E" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Pinyon+Script&family=Cinzel:wght@400;500&family=Noto+Serif+Devanagari:wght@400;500&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+
+  <body>
+    <main class="stage" id="stage" aria-label="The Wedding Book — an invitation you read page by page">
+      <span class="glow" aria-hidden="true"></span>
+
+      <div class="scene">
+        <div class="book" id="book">
+          <span class="book__back" aria-hidden="true"></span>
+          <span class="book__edge" aria-hidden="true"></span>
+          <div id="leaves"></div>
+        </div>
+        <span class="book__shadow" aria-hidden="true"></span>
+      </div>
+
+      <p class="hint" id="hint" aria-hidden="true">Tap the card to open</p>
+
+      <div class="topbtns">
+        <button class="ic" id="sound-btn" type="button" aria-pressed="false" hidden><svg viewBox="0 0 24 24" aria-hidden="true"><path class="i-speaker" d="M4 9h4l5-4v14l-5-4H4z" /><path class="i-waves" d="M16 8.5a5 5 0 0 1 0 7M18.5 6a8.5 8.5 0 0 1 0 12" /><path class="i-mute" d="M16 9l6 6M22 9l-6 6" /></svg><span class="sr-only">Sound</span></button>
+        <button class="ic" id="replay-btn" type="button"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12a8 8 0 1 0 2.4-5.7M4 4v4.5h4.5" /></svg><span class="sr-only">Start again from the first page</span></button>
+      </div>
+      <nav class="nav" aria-label="Pages">
+        <button class="ic" id="prev-btn" type="button" aria-label="Previous page"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7" /></svg></button>
+        <p class="nav__count"><b id="page-n">1</b> / <span id="page-total">1</span></p>
+        <button class="ic" id="auto-btn" type="button" aria-label="Pause page turning"><svg viewBox="0 0 24 24" aria-hidden="true"><path class="i-pause" d="M7 5h4v14H7zM13 5h4v14h-4z" /><path class="i-play" d="M8 5 L19 12 L8 19Z" /></svg></button>
+        <button class="ic" id="next-btn" type="button" aria-label="Next page"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5l7 7-7 7" /></svg></button>
+      </nav>
+    </main>
+
+    <script src="core.js" defer></script>
+    <script src="script.js" defer></script>
+  </body>
+</html>
