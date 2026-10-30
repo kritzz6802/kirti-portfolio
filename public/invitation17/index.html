@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-    <meta name="theme-color" content="#efe4d6" />
+    <meta name="theme-color" content="#1c060c" />
     <title>Kirti &amp; Dharmil — the pop-up invitation</title>
     <meta name="description" content="Open the card — the invitation pops up in 3D, line by line." />
     <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='4' fill='%23fffaf2'/%3E%3Cpath d='M6 26V14C6 8 26 8 26 14V26Z' fill='%23f4acb7'/%3E%3C/svg%3E" />
@@ -15,6 +15,17 @@
 
   <body>
     <main class="stage" id="stage" aria-label="A 3D paper pop-up wedding invitation">
+      <svg class="defs" aria-hidden="true" focusable="false">
+        <defs>
+          <linearGradient id="foil" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0" stop-color="#8a6420" /><stop offset=".28" stop-color="#e6c470" /><stop offset=".45" stop-color="#fff1c2" />
+            <stop offset=".62" stop-color="#c99a3c" /><stop offset="1" stop-color="#8f6a24" />
+          </linearGradient>
+          <linearGradient id="foilDark" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0" stop-color="#6e4c14" /><stop offset="1" stop-color="#3f2a08" />
+          </linearGradient>
+        </defs>
+      </svg>
       <div class="table" aria-hidden="true"></div>
 
       <div class="camera" id="camera">
@@ -40,6 +51,7 @@
         </div>
       </div>
 
+      <div class="dust" id="dust" aria-hidden="true"></div>
       <div id="tags"></div>
 
       <button class="open" id="open-btn" type="button"><span class="open__ring" aria-hidden="true"></span>Open the card</button>
@@ -59,6 +71,7 @@
     </main>
 
     <script src="core.js" defer></script>
+    <script src="cut.js" defer></script>
     <script src="script.js" defer></script>
   </body>
 </html>

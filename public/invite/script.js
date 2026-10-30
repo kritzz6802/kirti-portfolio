@@ -9,8 +9,8 @@ const INVITATIONS = [
     route: '../invitation17/',
     name: 'The Pop-up Words',
     tag: '3D pop-up',
-    text: 'The pop-up card, with words instead of pictures — open it and the invitation itself rises in cut-paper panels (an arch, a scalloped card, a ribbon), each line appearing in turn, a new pop-up page for every celebration.',
-    colours: ['#fff4ee', '#a23a55', '#c9a24b'],
+    text: 'A maroon-and-gold pop-up card with words instead of pictures — open it and laser-cut panels (a Mughal arch, a gold lace card, a mandala medallion, a foil ribbon) spring up in jewel tones, each line appearing in turn.',
+    colours: ['#5c0f23', '#e6c470', '#145a43'],
   },
   {
     route: '../invitation16/',

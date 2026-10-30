@@ -1,12 +1,14 @@
 # The Pop-up Words — `/invitation17/`
 
-**Format:** a 3D pop-up card like `/invitation14/`, but what pops up is **the invitation text itself**:
-cut-paper panels with no illustrations.
+**Format:** a premium 3D pop-up card like `/invitation14/`, but what pops up is **the invitation text itself**,
+on laser-cut panels with no illustrations. Maroon velvet and gold foil outside; inside, each page has its own jewel
+tone (maroon, emerald, royal blue, saffron, mustard, purple).
 
 ```
 invitation17/
 ├── index.html   the card (base, standing back, cover), chrome
-├── styles.css   the 3D card, folding layers, panel shapes (arch, scalloped card, plaque, ribbon), line reveal
+├── styles.css   the 3D card, folding layers, jewel-tone theme, gold dust, line reveal
+├── cut.js       laser-cut panels: Mughal arch, gold lace card, mandala medallion, foil ribbon; gold shows through every cut
 ├── script.js    the pages and their panels, the player, the tilt
 └── core.js      invitationData (wording, dates, venue, RSVP) + shared helpers
 ```
@@ -14,11 +16,12 @@ invitation17/
 **How it plays**
 
 1. A horizontal ivory card with a lace border, gold monogram and names. Tap **Open the card**.
-2. The cover lifts and stands up as the backdrop, and three paper panels **fold up from flat**, one behind
-   another. Once each panel is up, its lines of text appear one by one.
+2. The cover lifts and stands up as a jewel-toned backdrop with a gold jaali and arch window. Three laser-cut panels
+   **spring up from flat** one behind another, gold dust rises, light sweeps across the foil, and each panel's
+   lines of text appear one by one.
 3. Every page is a new pop-up: the panels fold down, the backdrop changes colour, and new panels rise.
 
-| Page | Back panel | Middle panel | Front ribbon |
+| Page | Back arch | Middle card / medallion | Front gold ribbon |
 | --- | --- | --- | --- |
 | Invitation | Ganesha, श्री गणेशाय नमः | "Together with their families", **Kirti & Dharmil** | the date |
 | Families | Bride's parents… "wedding of their daughter" | **Kirti & Dharmil** | "son of" the groom's parents |
